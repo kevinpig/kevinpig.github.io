@@ -82,6 +82,78 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/08/07/setup-cross-platform-dev-env-with-vagrant/" title="setup_cross_platform_dev_env_with_vagrant" itemprop="url">setup_cross_platform_dev_env_with_vagrant</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-07T09:10:15.000Z" itemprop="datePublished"> 发表于 2015-08-07</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="什么是vagrant">什么是vagrant</h2><p><a href="https://www.vagrantup.com">vagrant</a>是一款构建虚拟开发环境的功能。可以使用vagrant封装一个标准的linux开发环境，然后分发给开发团队的成员。这样其他成员就可以在自己喜欢的桌面系统进行开发，而代码执行却可以在统一的环境，非常的便利。</p>
+<h2 id="vagrant环境准备">vagrant环境准备</h2><ol>
+<li>安装 <a href="www.virtualbox.org">virtualBox</a></li>
+<li>下载安装vagrant</li>
+<li>下载官方封装好的基础镜像 (比如ubuntu)</li>
+<li>添加镜像到vagrant <code>$ vagrant box add trusty /path/to/trusty.box</code></li>
+</ol>
+<h2 id="初始化开发环境">初始化开发环境</h2><figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="char">$ </span>cd ~/dev</span><br><span class="line"><span class="char">$ </span>vagrant init trusty</span><br><span class="line"><span class="char">$ </span>vagrant up</span><br></pre></td></tr></table></figure>
+<p>看到终端显示启动完成以后，就可以通过ssh登录到虚拟机了<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vagrant ssh </span><br><span class="line"><span class="variable">$ </span>cd /vagrant   <span class="comment"># 切换到开发目录，这里的目录对应host机器上的～/dev目录</span></span><br></pre></td></tr></table></figure></p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/08/07/setup-cross-platform-dev-env-with-vagrant/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/dev/">dev</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/vagrant/">vagrant</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/07/setup-cross-platform-dev-env-with-vagrant/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/07/setup-cross-platform-dev-env-with-vagrant/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/08/07/2015-08-07-how-to-create-openstack-windows-image/" title="如何创建openstack windows 虚拟机镜像" itemprop="url">如何创建openstack windows 虚拟机镜像</a>
   </h1>
   <p class="article-author">By
@@ -155,6 +227,10 @@
 		<ul>
 		
 		  
+			<li><a href="/categories/dev/" title="dev">dev<sup>1</sup></a></li>
+		  
+		
+		  
 			<li><a href="/categories/云计算/" title="云计算">云计算<sup>1</sup></a></li>
 		  
 		
@@ -169,6 +245,10 @@
 		
 			
 				<li><a href="/tags/openstack-windows-image/" title="openstack windows image">openstack windows image<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/vagrant/" title="vagrant">vagrant<sup>1</sup></a></li>
 			
 		
 		</ul>
