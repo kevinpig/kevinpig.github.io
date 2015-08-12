@@ -1,11 +1,14 @@
+---
 layout: post
 title: (转载)基于网易的openstack部署运维实战
 date: 2015-08-12 10:21:21
 tags:
  - Openstack
  - Devops
-descriptions: 本文为您介绍了网易公司基于 OpenStack 开发的一套云计算管理平台，以及在开发、运营、维护过程中遇到的问题和经验分享。网易作为大型互联网公司，IT 基础架构需要支撑包括生产、开发、测试、管理等多方面的需要，而且需求和请求的变化几乎每天都存在，这就需要内部的 IT 基础架构能够足够灵活和健壮来满足各部门和团队的实际需要。网易私有云平台团队也希望通过本文和广大的 OpenStack 使用者进行一个交流，分享他们在实际项目中收获的成果。
-
+categories:
+ - 云计算
+ - Openstack
+description: 本文为您介绍了网易公司基于 OpenStack 开发的一套云计算管理平台，以及在开发、运营、维护过程中遇到的问题和经验分享。网易作为大型互联网公司，IT 基础架构需要支撑包括生产、开发、测试、管理等多方面的需要，而且需求和请求的变化几乎每天都存在，这就需要内部的 IT 基础架构能够足够灵活和健壮来满足各部门和团队的实际需要。网易私有云平台团队也希望通过本文和广大的 OpenStack 使用者进行一个交流，分享他们在实际项目中收获的成果。
 ---
 
 ## OpenStack 简介
@@ -29,10 +32,8 @@ descriptions: 本文为您介绍了网易公司基于 OpenStack 开发的一套�
 
 ## 网易私有云平台概况
 
-　　　　　　　　　　　　![](/images/neteasy_openstack_ar.jpg)
-
-　　　　　　　　　　　　　　　　　（图1） 网易私有云架构
-
+<img src="/images/neteasy_openstack_ar.jpg" alt="(图1 网易私有云架构)" class="img-center" />
+　　　　　　　　　　　　
 　　网易私有云平台由网易杭州研究院负责研发，主要提供基础设施资源、数据存储处理、应用开发部署、运维管理等功能以满足公司产品测试/上线的需求。
 　　图 1 展示了网易私有云平台的整体架构。整个私有云平台可分为三大类服务：核心基础设施服务（IaaS）、基础平台服务（PaaS）以及运维管理支撑服务，目前 一共包括了：云主机（虚拟机）、云网络、云硬盘、对象存储、对象缓存、关系型数据库、分布式数据库、全文检索、消息队列、视频转码、负载均衡、容器引擎、 云计费、云监控、管理平台等 15 个服务。网易私有云平台充分利用云计算开源的最新成果，我们基于 OpenStack 社区的 keystone、glance、nova、neutron 组件研发部署了云主机和云网络服务。
 
@@ -46,15 +47,13 @@ descriptions: 本文为您介绍了网易公司基于 OpenStack 开发的一套�
 
 　　由于网易私有云需要部署在多个机房之中，每个机房之间在地理位置上自然隔离，这对上层的应用来说是天然的容灾方法。另外，为了满足私有云的功能和运维需 求，网易私有云需要同时支持两种网络模式：nova-network 和 neutron。针对这些需求，我们提出了一个面向企业级的多区域部署方案，如图 2 所示。从整体上看，多个区域之间的部署相对独立，但可通过内网实现互通，每个区域中包括了一个完整的 OpenStack 部署，所以可以使用独立的镜像服务和独立的网络模式，例如区域 A 使用 nova-network，区域 B 使用 neutron，互不影响，另外为了实现用户的单点登录，区域之间共享了 keystone，区域的划分依据主要是网络模式和地理位置。
 
-　　　　　　　　　![](/images/neteasy_openstack_multi_region.jpg)
-　　　　　　　　　　　　　　　　(图2) 多区域部署方法
+<img src="/images/neteasy_openstack_multi_region.jpg" alt="(图2) 多区域部署方法" class="img-center" />　　　　　　　　　　　　　
 
 　　和典型 OpenStack 部署将硬件划分为计算节点和控制节点不同的是，为了充分利用硬件资源，我们努力把部署设计成对称的，即任意一个节点下线对整体服务不会照成影响。因此我们 将硬件分为两类：计算节点，控制计算节点。计算节点部署 nova-network，nova-compute，nova-api-metadata，nova-api-os-compute。控制计算节点除了 计算节点的服务外还部署了 nova-scheduler，nova-novncproxy，nova-consoleauth，glance-api，glance- registry 和 keystone，如图 3 所示。
 
 　　对外提供 API 的服务有 nova-api-os-compute，nova-novncproxy ,glance-api，keystone。这类服务的特点是无状态，可以方便地横向扩展，故此类服务均部署在负载均衡 HAProxy 之后，并且使用 Keepalived 做高可用。为了保证服务质量和便于维护，我们没有使用 nova-api，而是分为 nova-api-os-compute 和 nova-api-metadata 分别管理。外部依赖方面，网易私有云部署了高可用 RabbitMQ 集群和主备 MySQL，以及 memcache 集群。
 
-　　　　　　　　　![](/images/neteasy_openstack_control_computer.jpg)
-　　　　　　　　　　　　　　　　(图3) 计算节点 控制节点
+<img src="/images/neteasy_openstack_control_computer.jpg" alt="　(图3) 计算节点 控制节点" class="img-center">　　　　　　　　　　　　　　　　　　　　　　　
 
 　　网络规划方面，网易私有云主要使用 nova-network 的 FlatDHCPManager+multi-host 网络模式，并划分了多个 Vlan，分别用于虚拟机 fixed-ip 网络、内网浮动 IP 网络、外网网络。
 

@@ -3,8 +3,14 @@ layout: post
 title: "如何创建openstack windows 虚拟机镜像"
 date: 2015-08-07 10:57:39 +0800
 comments: true
-categories: 云计算
-tags: openstack windows image
+tags:
+ - Openstack
+ - windows
+ - image
+categories:
+ - 云计算
+ - Openstack
+description: 
 ---
 
 
