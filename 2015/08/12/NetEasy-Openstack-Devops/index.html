@@ -12,19 +12,19 @@
     
 
     
-    <meta name="description" content="OpenStack 简介　　OpenStack 是一个开源的 IaaS 实现，它由一些相互关联的子项目组成，主要包括计算、存储、网络。由于以 Apache 协议发布，自 2010 年项目成立以来，超过 200 个公司加入了 OpenStack 项目，其中包括 AT&amp;amp;T、AMD、Cisco、Dell、IBM、Intel、Red Hat 等。目前参与 OpenStack 项目的开发人员有 17">
+    <meta name="description" content="本文为您介绍了网易公司基于 OpenStack 开发的一套云计算管理平台，以及在开发、运营、维护过程中遇到的问题和经验分享。网易作为大型互联网公司，IT 基础架构需要支撑包括生产、开发、测试、管理等多方面的需要，而且需求和请求的变化几乎每天都存在，这就需要内部的 IT 基础架构能够足够灵活和健壮来满足各部门和团队的实际需要。网易私有云平台团队也希望通过本文和广大的 OpenStack 使用者进行一">
 <meta property="og:type" content="article">
 <meta property="og:title" content="(转载)基于网易的openstack部署运维实战">
 <meta property="og:url" content="http://yoursite.com/2015/08/12/NetEasy-Openstack-Devops/index.html">
 <meta property="og:site_name" content="kevin的博客">
-<meta property="og:description" content="OpenStack 简介　　OpenStack 是一个开源的 IaaS 实现，它由一些相互关联的子项目组成，主要包括计算、存储、网络。由于以 Apache 协议发布，自 2010 年项目成立以来，超过 200 个公司加入了 OpenStack 项目，其中包括 AT&amp;amp;T、AMD、Cisco、Dell、IBM、Intel、Red Hat 等。目前参与 OpenStack 项目的开发人员有 17">
+<meta property="og:description" content="本文为您介绍了网易公司基于 OpenStack 开发的一套云计算管理平台，以及在开发、运营、维护过程中遇到的问题和经验分享。网易作为大型互联网公司，IT 基础架构需要支撑包括生产、开发、测试、管理等多方面的需要，而且需求和请求的变化几乎每天都存在，这就需要内部的 IT 基础架构能够足够灵活和健壮来满足各部门和团队的实际需要。网易私有云平台团队也希望通过本文和广大的 OpenStack 使用者进行一">
 <meta property="og:image" content="http://yoursite.com/images/neteasy_openstack_ar.jpg">
 <meta property="og:image" content="http://yoursite.com/images/neteasy_openstack_multi_region.jpg">
 <meta property="og:image" content="http://yoursite.com/images/neteasy_openstack_control_computer.jpg">
-<meta property="og:updated_time" content="2015-08-12T03:35:54.000Z">
+<meta property="og:updated_time" content="2015-08-12T06:08:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="(转载)基于网易的openstack部署运维实战">
-<meta name="twitter:description" content="OpenStack 简介　　OpenStack 是一个开源的 IaaS 实现，它由一些相互关联的子项目组成，主要包括计算、存储、网络。由于以 Apache 协议发布，自 2010 年项目成立以来，超过 200 个公司加入了 OpenStack 项目，其中包括 AT&amp;amp;T、AMD、Cisco、Dell、IBM、Intel、Red Hat 等。目前参与 OpenStack 项目的开发人员有 17">
+<meta name="twitter:description" content="本文为您介绍了网易公司基于 OpenStack 开发的一套云计算管理平台，以及在开发、运营、维护过程中遇到的问题和经验分享。网易作为大型互联网公司，IT 基础架构需要支撑包括生产、开发、测试、管理等多方面的需要，而且需求和请求的变化几乎每天都存在，这就需要内部的 IT 基础架构能够足够灵活和健壮来满足各部门和团队的实际需要。网易私有云平台团队也希望通过本文和广大的 OpenStack 使用者进行一">
 
     
     <link rel="alternative" href="/atom.xml" title="kevin的博客" type="application/atom+xml">
@@ -118,16 +118,14 @@
 </ul>
 <a id="more"></a>
 <p>　　网易私有云使用了 Nova、Glance、Keystone、Neutron 这 4 个组件。</p>
-<h2 id="网易私有云平台概况">网易私有云平台概况</h2><p>　　　　　　　　　　　　<img src="/images/neteasy_openstack_ar.jpg" alt=""></p>
-<p>　　　　　　　　　　　　　　　　　（图1） 网易私有云架构</p>
-<p>　　网易私有云平台由网易杭州研究院负责研发，主要提供基础设施资源、数据存储处理、应用开发部署、运维管理等功能以满足公司产品测试/上线的需求。<br>　　图 1 展示了网易私有云平台的整体架构。整个私有云平台可分为三大类服务：核心基础设施服务（IaaS）、基础平台服务（PaaS）以及运维管理支撑服务，目前 一共包括了：云主机（虚拟机）、云网络、云硬盘、对象存储、对象缓存、关系型数据库、分布式数据库、全文检索、消息队列、视频转码、负载均衡、容器引擎、 云计费、云监控、管理平台等 15 个服务。网易私有云平台充分利用云计算开源的最新成果，我们基于 OpenStack 社区的 keystone、glance、nova、neutron 组件研发部署了云主机和云网络服务。</p>
+<h2 id="网易私有云平台概况">网易私有云平台概况</h2><p><img src="/images/neteasy_openstack_ar.jpg" alt="(图1 网易私有云架构)" class="img-center"><br>　　　　　　　　　　　　<br>　　网易私有云平台由网易杭州研究院负责研发，主要提供基础设施资源、数据存储处理、应用开发部署、运维管理等功能以满足公司产品测试/上线的需求。<br>　　图 1 展示了网易私有云平台的整体架构。整个私有云平台可分为三大类服务：核心基础设施服务（IaaS）、基础平台服务（PaaS）以及运维管理支撑服务，目前 一共包括了：云主机（虚拟机）、云网络、云硬盘、对象存储、对象缓存、关系型数据库、分布式数据库、全文检索、消息队列、视频转码、负载均衡、容器引擎、 云计费、云监控、管理平台等 15 个服务。网易私有云平台充分利用云计算开源的最新成果，我们基于 OpenStack 社区的 keystone、glance、nova、neutron 组件研发部署了云主机和云网络服务。</p>
 <p>　　为了与网易私有云平台其他服务（云硬盘、 云监控、云计费等）深度整合以及满足公司产品使用和运维管理的特定需求，我们团队在社区 OpenStack 版本的基础上独立研发了包括：云主机资源质量保障（计算、存储、网络 QoS）、镜像分块存储、云主机心跳上报、flat-dhcp 模式下租户内网隔离等 20 多个新功能。同时，我们团队在日常运维 OpenStack 以及升级社区新版本中，也总结了一些部署、运维规范以及升级经验。两年多来，网易私有云平台 OpenStack 团队的研发秉承开源、开放的理念，始终遵循”来源社区，回馈社区”的原则。在免费享受 OpenStack 社区不断研发新功能以及修复 bug 的同时，我们团队也积极向社区做自己的贡献，从而帮助 OpenStack 社区的发展壮大。两年来，我们团队一共向社区提交新功能开发/bug 修复的 commits 近 100 个，修复社区 bug 50 多个，这些社区贡献涉及 OpenStack 的 Essex、Folsom、Havana、Icehouse、Juno 等版本。<br>　　1. 提高了公司基础设施资源利用率，从而降低了硬件成本。以物理服务器 CPU 利用率为例，私有云平台将 CPU 平均利用率从不到 10% 提升到 50%。<br>　　2. 提高了基础设施资源管理与运维自动化水平，从而降低了运维成本。借助于 Web 自助式的资源申请和分配方式以及云平台自动部署服务，系统运维人员减少了 50%。<br>　　3. 提高了基础设施资源使用弹性，从而增强了产品业务波动的适应能力。利用虚拟化技术将物理基础设施做成虚拟资源池，通过有效的容量规划以及按需使用，私有云平台可以很好适应产品突发业务。</p>
 <h2 id="网易_OpenStack_部署参考方案介绍">网易 OpenStack 部署参考方案介绍</h2><p>　　在具体的生产环境中，我们为了兼顾性能和可靠性，keystone 后端使用 Mysql 存储用户信息，使用 memcache 存放 token。为了减少对 keystone 的访问压力，所有服务（nova，glance，neutron）的 keystoneclient 均配置使用 memcache 作为 token 的缓存。</p>
 <p>　　由于网易私有云需要部署在多个机房之中，每个机房之间在地理位置上自然隔离，这对上层的应用来说是天然的容灾方法。另外，为了满足私有云的功能和运维需 求，网易私有云需要同时支持两种网络模式：nova-network 和 neutron。针对这些需求，我们提出了一个面向企业级的多区域部署方案，如图 2 所示。从整体上看，多个区域之间的部署相对独立，但可通过内网实现互通，每个区域中包括了一个完整的 OpenStack 部署，所以可以使用独立的镜像服务和独立的网络模式，例如区域 A 使用 nova-network，区域 B 使用 neutron，互不影响，另外为了实现用户的单点登录，区域之间共享了 keystone，区域的划分依据主要是网络模式和地理位置。</p>
-<p>　　　　　　　　　<img src="/images/neteasy_openstack_multi_region.jpg" alt=""><br>　　　　　　　　　　　　　　　　(图2) 多区域部署方法</p>
+<p><img src="/images/neteasy_openstack_multi_region.jpg" alt="(图2) 多区域部署方法" class="img-center">　　　　　　　　　　　　　</p>
 <p>　　和典型 OpenStack 部署将硬件划分为计算节点和控制节点不同的是，为了充分利用硬件资源，我们努力把部署设计成对称的，即任意一个节点下线对整体服务不会照成影响。因此我们 将硬件分为两类：计算节点，控制计算节点。计算节点部署 nova-network，nova-compute，nova-api-metadata，nova-api-os-compute。控制计算节点除了 计算节点的服务外还部署了 nova-scheduler，nova-novncproxy，nova-consoleauth，glance-api，glance- registry 和 keystone，如图 3 所示。</p>
 <p>　　对外提供 API 的服务有 nova-api-os-compute，nova-novncproxy ,glance-api，keystone。这类服务的特点是无状态，可以方便地横向扩展，故此类服务均部署在负载均衡 HAProxy 之后，并且使用 Keepalived 做高可用。为了保证服务质量和便于维护，我们没有使用 nova-api，而是分为 nova-api-os-compute 和 nova-api-metadata 分别管理。外部依赖方面，网易私有云部署了高可用 RabbitMQ 集群和主备 MySQL，以及 memcache 集群。</p>
-<p>　　　　　　　　　<img src="/images/neteasy_openstack_control_computer.jpg" alt=""><br>　　　　　　　　　　　　　　　　(图3) 计算节点 控制节点</p>
+<p><img src="/images/neteasy_openstack_control_computer.jpg" alt="　(图3) 计算节点 控制节点" class="img-center">　　　　　　　　　　　　　　　　　　　　　　　</p>
 <p>　　网络规划方面，网易私有云主要使用 nova-network 的 FlatDHCPManager+multi-host 网络模式，并划分了多个 Vlan，分别用于虚拟机 fixed-ip 网络、内网浮动 IP 网络、外网网络。</p>
 <p>　　运维上使用网易自主研发的运维平台做监控和报警，功能类似 Nagios，但是更加强大。其中较重要的监控报警包括日志监控和进程监控。日志监控保证服务发生异常时第一时间发现，进程监控保证服务正常运行。另外网易私有云使用 Puppet 做自动部署，以及使用 StackTach 帮助定位 bug。</p>
 <h2 id="OpenStack_各组件配置">OpenStack 各组件配置</h2><p>　　OpenStack Havana 的配置项成百上千，大部分配置项都是可以使用默认值的，否则光是理解这么多的配置项的含义就足以让运维人员崩溃，尤其是对那些并不熟悉源码的运维人员来说 更是如此。下文将列举若干网易私有云中较关键的配置项，并解释它们如何影响到服务的功能，安全性，以及性能等问题。</p>
@@ -250,6 +248,11 @@
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/云计算/">云计算</a>►<a class="article-category-link" href="/categories/云计算/Openstack/">Openstack</a>
+</div>
+
 
   <div class="article-tags">
   
@@ -313,11 +316,23 @@
 		<ul>
 		
 		  
+		
+		  
+			<li><a href="/categories/云计算/Openstack/" title="Openstack">Openstack<sup>2</sup></a></li>
+		  
+		
+		  
+		
+		  
 			<li><a href="/categories/dev/" title="dev">dev<sup>1</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/云计算/" title="云计算">云计算<sup>1</sup></a></li>
+			<li><a href="/categories/云计算/" title="云计算">云计算<sup>2</sup></a></li>
+		  
+		
+		  
+		
 		  
 		
 		</ul>
@@ -330,7 +345,7 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/openstack-windows-image/" title="openstack windows image">openstack windows image<sup>1</sup></a></li>
+				<li><a href="/tags/Openstack/" title="Openstack">Openstack<sup>2</sup></a></li>
 			
 		
 			
@@ -338,11 +353,17 @@
 			
 		
 			
-				<li><a href="/tags/Openstack/" title="Openstack">Openstack<sup>1</sup></a></li>
+				<li><a href="/tags/Devops/" title="Devops">Devops<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Devops/" title="Devops">Devops<sup>1</sup></a></li>
+				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/image/" title="image">image<sup>1</sup></a></li>
+			
+		
 			
 		
 			
