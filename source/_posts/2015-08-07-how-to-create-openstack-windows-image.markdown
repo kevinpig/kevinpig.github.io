@@ -9,7 +9,7 @@ tags:
  - image
 categories:
  - 云计算
- - Openstack
+ 
 description: 
 ---
 
