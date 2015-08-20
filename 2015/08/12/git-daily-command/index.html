@@ -1,0 +1,538 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="baidu-site-verification" content="b5yHXUh5Ez" />
+  
+    <title>git 常用技能 | kevin的博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="kevin">
+    
+
+    
+    <meta name="description" content="git常用技能总结，原文链接 http://wuchong.me/blog/2015/03/30/git-useful-skills/
+学习使用 Git 已经一年有余，一些常用技能也用的炉火纯青了，但偶尔碰到一些生僻的技能，总是需要去 Google，第二次用时又忘了。所以这是一篇我自认为比较重要的 Git 技能表，主要供自己查阅使用，反复查阅能够加深印象，提升技能熟练度。如果你是还不知道 Git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git 常用技能">
+<meta property="og:url" content="http://yoursite.com/2015/08/12/git-daily-command/index.html">
+<meta property="og:site_name" content="kevin的博客">
+<meta property="og:description" content="git常用技能总结，原文链接 http://wuchong.me/blog/2015/03/30/git-useful-skills/
+学习使用 Git 已经一年有余，一些常用技能也用的炉火纯青了，但偶尔碰到一些生僻的技能，总是需要去 Google，第二次用时又忘了。所以这是一篇我自认为比较重要的 Git 技能表，主要供自己查阅使用，反复查阅能够加深印象，提升技能熟练度。如果你是还不知道 Git">
+<meta property="og:image" content="http://ww4.sinaimg.cn/mw690/81b78497jw1eqnk1bkyaij20e40bpjsm.jpg">
+<meta property="og:updated_time" content="2015-08-12T06:23:59.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="git 常用技能">
+<meta name="twitter:description" content="git常用技能总结，原文链接 http://wuchong.me/blog/2015/03/30/git-useful-skills/
+学习使用 Git 已经一年有余，一些常用技能也用的炉火纯青了，但偶尔碰到一些生僻的技能，总是需要去 Google，第二次用时又忘了。所以这是一篇我自认为比较重要的 Git 技能表，主要供自己查阅使用，反复查阅能够加深印象，提升技能熟练度。如果你是还不知道 Git">
+
+    
+    <link rel="alternative" href="/atom.xml" title="kevin的博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="kevin的博客" title="kevin的博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="kevin的博客">kevin的博客</a></h1>
+				<h2 class="blog-motto">记录工作生活中的点滴</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/08/12/git-daily-command/" title="git 常用技能" itemprop="url">git 常用技能</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-12T06:16:31.000Z" itemprop="datePublished"> 发表于 2015-08-12</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#工作流"><span class="toc-number">1.</span> <span class="toc-text">工作流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#远程仓库"><span class="toc-number">2.</span> <span class="toc-text">远程仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#添加远程仓库"><span class="toc-number">2.1.</span> <span class="toc-text">添加远程仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看远程仓库"><span class="toc-number">2.2.</span> <span class="toc-text">查看远程仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#推送分支"><span class="toc-number">2.3.</span> <span class="toc-text">推送分支</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#抓取分支"><span class="toc-number">2.4.</span> <span class="toc-text">抓取分支</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除远程分支"><span class="toc-number">2.5.</span> <span class="toc-text">删除远程分支</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#历史管理"><span class="toc-number">3.</span> <span class="toc-text">历史管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#查看历史"><span class="toc-number">3.1.</span> <span class="toc-text">查看历史</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#版本回退"><span class="toc-number">3.2.</span> <span class="toc-text">版本回退</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#管理修改"><span class="toc-number">4.</span> <span class="toc-text">管理修改</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#查看差异"><span class="toc-number">4.1.</span> <span class="toc-text">查看差异</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除文件"><span class="toc-number">4.2.</span> <span class="toc-text">删除文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#储藏和恢复"><span class="toc-number">4.3.</span> <span class="toc-text">储藏和恢复</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分支管理"><span class="toc-number">5.</span> <span class="toc-text">分支管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#创建分支"><span class="toc-number">5.1.</span> <span class="toc-text">创建分支</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#合并分支"><span class="toc-number">5.2.</span> <span class="toc-text">合并分支</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#标签"><span class="toc-number">6.</span> <span class="toc-text">标签</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#显示标签"><span class="toc-number">6.1.</span> <span class="toc-text">显示标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建标签"><span class="toc-number">6.2.</span> <span class="toc-text">创建标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#操作标签"><span class="toc-number">6.3.</span> <span class="toc-text">操作标签</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Git_设置"><span class="toc-number">7.</span> <span class="toc-text">Git 设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设置_commit_的用户和邮箱"><span class="toc-number">8.</span> <span class="toc-text">设置 commit 的用户和邮箱</span></a></li></ol>
+		
+		</div>
+		
+		<p>git常用技能总结，原文链接 <a href="http://wuchong.me/blog/2015/03/30/git-useful-skills/" target="_blank" rel="external">http://wuchong.me/blog/2015/03/30/git-useful-skills/</a></p>
+<p>学习使用 Git 已经一年有余，一些常用技能也用的炉火纯青了，但偶尔碰到一些生僻的技能，总是需要去 Google，第二次用时又忘了。所以这是一篇我自认为比较重要的 Git 技能表，主要供自己查阅使用，反复查阅能够加深印象，提升技能熟练度。如果你是还不知道 Git 是什么，建议先阅读<a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000" target="_blank" rel="external">廖雪峰的Git教程</a> </p>
+<h2 id="工作流">工作流</h2><p>Git 最核心的一个概念就是工作流。工作区(Workspace)是电脑中实际的目录；暂存区(Index)像个缓存区域，临时保存你的改动；最后是版本库(Repository)，分为本地仓库和远程仓库。下图真是一图胜千言啊，就无耻盗图了。</p>
+<p><img src="http://ww4.sinaimg.cn/mw690/81b78497jw1eqnk1bkyaij20e40bpjsm.jpg" alt=""></p>
+<a id="more"></a>
+<h2 id="远程仓库">远程仓库</h2><h3 id="添加远程仓库">添加远程仓库</h3><p>git remote add origin git@server-name:path/repo-name.git  #添加一个远程库</p>
+<h3 id="查看远程仓库">查看远程仓库</h3><p>git remote      #要查看远程库的信息<br>git remote -v   #显示更详细的信息</p>
+<h3 id="推送分支">推送分支</h3><p>git push origin master    #推送到远程master分支</p>
+<h3 id="抓取分支">抓取分支</h3><p>git clone git@server-name:path/repo-name.git   #克隆远程仓库到本地(能看到master分支)<br>git checkout -b dev origin/dev  #创建远程origin的dev分支到本地，并命名为dev<br>git pull origin master          #从远程分支进行更新<br>git fetch origin master         #获取远程分支上的数据</p>
+<p>$ git branch –set-upstream branch-name origin/branch-name，可以建立起本地分支和远程分支的关联，之后可以直接git pull从远程抓取分支。</p>
+<p>另外，git pull = git fetch + merge to local</p>
+<h3 id="删除远程分支">删除远程分支</h3><p>$ git push origin –delete bugfix<br>To <a href="https://github.com/wuchong/jacman" target="_blank" rel="external">https://github.com/wuchong/jacman</a></p>
+<ul>
+<li>[deleted]         bugfix</li>
+</ul>
+<h2 id="历史管理">历史管理</h2><h3 id="查看历史">查看历史</h3><p>git log –pretty=oneline filename #一行显示<br>git log -p -2      #显示最近2次提交内容的差异<br>git show cb926e7   #查看某次修改</p>
+<h3 id="版本回退">版本回退</h3><p>git reset –hard HEAD^    #回退到上一个版本<br>git reset –hard cb926e7  #回退到具体某个版<br>git reflog                #查看命令历史,常用于帮助找回丢失掉的commit</p>
+<p>用HEAD表示当前版本，上一个版本就是HEAD^，上上一个版本就是HEAD^^，HEAD~100就是上100个版本。</p>
+<h2 id="管理修改">管理修改</h2><p>git status              #查看工作区、暂存区的状态<br>git checkout – <file>  #丢弃工作区上某个文件的修改<br>git reset HEAD <file>   #丢弃暂存区上某个文件的修改，重新放回工作区</file></file></p>
+<h3 id="查看差异">查看差异</h3><p>git diff              #查看未暂存的文件更新<br>git diff –cached     #查看已暂存文件的更新<br>git diff HEAD – readme.txt  #查看工作区和版本库里面最新版本的区别<br>git diff <source_branch> <target_branch>  #在合并改动之前，预览两个分支的差异</target_branch></source_branch></p>
+<p>使用内建的图形化git：gitk，可以更方便清晰地查看差异。当然 Github 客户端也不错。</p>
+<h3 id="删除文件">删除文件</h3><p>git rm <file>           #直接删除文件<br>git rm –cached <file>  #删除文件暂存状态</file></file></p>
+<h3 id="储藏和恢复">储藏和恢复</h3><p>git stash           #储藏当前工作<br>git stash list      #查看储藏的工作现场<br>git stash apply     #恢复工作现场，stash内容并不删除<br>git stash pop       #恢复工作现场，并删除stash内容</p>
+<h2 id="分支管理">分支管理</h2><h3 id="创建分支">创建分支</h3><p>git branch develop              #只创建分支<br>git checkout -b master develop  #创建并切换到 develop 分支</p>
+<h3 id="合并分支">合并分支</h3><p>git checkout master         #切换到主分支<br>git merge –no-ff develop   #把 develop 合并到 master 分支，no-ff 选项的作用是保留原分支记录<br>git branch -d develop       #删除 develop 分支</p>
+<h2 id="标签">标签</h2><h3 id="显示标签">显示标签</h3><p>git tag         #列出现有标签<br>git show <tagname>  #显示标签信息</tagname></p>
+<h3 id="创建标签">创建标签</h3><p>git tag v0.1    #新建标签，默认位 HEAD<br>git tag v0.1 cb926e7  #对指定的 commit id 打标签<br>git tag -a v0.1 -m ‘version 0.1 released’   #新建带注释标签</p>
+<h3 id="操作标签">操作标签</h3><p>git checkout <tagname>        #切换到标签</tagname></p>
+<p>git push origin <tagname>     #推送分支到源上<br>git push origin –tags        #一次性推送全部尚未推送到远程的本地标签</tagname></p>
+<p>git tag -d <tagname>          #删除标签<br>git push origin :refs/tags/<tagname>      #删除远程标签</tagname></tagname></p>
+<h2 id="Git_设置">Git 设置</h2><h2 id="设置_commit_的用户和邮箱">设置 commit 的用户和邮箱</h2><p>git config user.name “xx”               #设置 commit 的用户<br>git config user.email.com “xx@xx.com”   #设置 commit 的邮箱<br>git config format.pretty oneline        #显示历史记录时，每个提交的信息只显示一行</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/转载/">转载</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/git/">git</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/2015/08/12/git-daily-command/" data-title="git 常用技能 | kevin的博客" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/08/13/xiaomi-openstack-case/" title="(转载)详解OpenStack在小米私有云平台的实践">
+  <strong>上一篇：</strong><br/>
+  <span>
+  (转载)详解OpenStack在小米私有云平台的实践</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/08/12/NetEasy-Openstack-Devops/"  title="(转载)基于网易的openstack部署运维实战">
+ <strong>下一篇：</strong><br/> 
+ <span>(转载)基于网易的openstack部署运维实战
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/08/12/git-daily-command/" data-title="git 常用技能" data-url="http://yoursite.com/2015/08/12/git-daily-command/"></div>
+</section>
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#工作流"><span class="toc-number">1.</span> <span class="toc-text">工作流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#远程仓库"><span class="toc-number">2.</span> <span class="toc-text">远程仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#添加远程仓库"><span class="toc-number">2.1.</span> <span class="toc-text">添加远程仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看远程仓库"><span class="toc-number">2.2.</span> <span class="toc-text">查看远程仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#推送分支"><span class="toc-number">2.3.</span> <span class="toc-text">推送分支</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#抓取分支"><span class="toc-number">2.4.</span> <span class="toc-text">抓取分支</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除远程分支"><span class="toc-number">2.5.</span> <span class="toc-text">删除远程分支</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#历史管理"><span class="toc-number">3.</span> <span class="toc-text">历史管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#查看历史"><span class="toc-number">3.1.</span> <span class="toc-text">查看历史</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#版本回退"><span class="toc-number">3.2.</span> <span class="toc-text">版本回退</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#管理修改"><span class="toc-number">4.</span> <span class="toc-text">管理修改</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#查看差异"><span class="toc-number">4.1.</span> <span class="toc-text">查看差异</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除文件"><span class="toc-number">4.2.</span> <span class="toc-text">删除文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#储藏和恢复"><span class="toc-number">4.3.</span> <span class="toc-text">储藏和恢复</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分支管理"><span class="toc-number">5.</span> <span class="toc-text">分支管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#创建分支"><span class="toc-number">5.1.</span> <span class="toc-text">创建分支</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#合并分支"><span class="toc-number">5.2.</span> <span class="toc-text">合并分支</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#标签"><span class="toc-number">6.</span> <span class="toc-text">标签</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#显示标签"><span class="toc-number">6.1.</span> <span class="toc-text">显示标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建标签"><span class="toc-number">6.2.</span> <span class="toc-text">创建标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#操作标签"><span class="toc-number">6.3.</span> <span class="toc-text">操作标签</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Git_设置"><span class="toc-number">7.</span> <span class="toc-text">Git 设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设置_commit_的用户和邮箱"><span class="toc-number">8.</span> <span class="toc-text">设置 commit 的用户和邮箱</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+		
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/dev/" title="dev">dev<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/云计算/" title="云计算">云计算<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/转载/云计算/" title="云计算">云计算<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/转载/" title="转载">转载<sup>3</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Openstack/" title="Openstack">Openstack<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/image/" title="image">image<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/vagrant/" title="vagrant">vagrant<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Devops/" title="Devops">Devops<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m kevin in united-imaging.com. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="kevin">kevin</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"kevinpig"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
