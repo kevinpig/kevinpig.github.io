@@ -1,5 +1,5 @@
 layout: post
-title: openstack_private_cloud_env
+title: 搭建公司Openstack私有云环境
 date: 2015-09-10 10:26:48
 tags:
  - Openstack
@@ -21,6 +21,8 @@ description:
  1. 提高公司IT资产的利用率，提高IT的管理效率。使更多的人可以快速获取所需要的资源。
  2. 提供研发云平台，促进公司产品与云平台的兼容，帮助联影快速的构建所有类型的应用，包括移动应用，Web应用和Restful API
  3. 基于云平台，提供基于Hadoop和spark大数据计算平台，为公司大数据提供基础设施的支持平台。
+
+<!--more-->
 
 ## 3. 技术选型
 
