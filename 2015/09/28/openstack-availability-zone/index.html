@@ -5,38 +5,32 @@
   <meta charset="UTF-8">
   <meta name="baidu-site-verification" content="b5yHXUh5Ez" />
   
-    <title>利用varant搭建跨平台开发环境 | kevin的博客</title>
+    <title>openstack中的可用域的配置 | kevin的博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="kevin">
     
 
     
-    <meta name="description" content="什么是vagrantvagrant是一款构建虚拟开发环境的功能。可以使用vagrant封装一个标准的linux开发环境，然后分发给开发团队的成员。这样其他成员就可以在自己喜欢的桌面系统进行开发，而代码执行却可以在统一的环境，非常的便利。
-vagrant环境准备
-安装 virtualBox
-下载安装vagrant
-下载官方封装好的基础镜像 (比如ubuntu)
-添加镜像到vagrant $ vagr">
+    <meta name="description" content="前言
+什么使availablitiy_zoneaz 是用户可见的,用来手动的指定VM运行在哪些Host上. az 是在region范围内再次切分，例如可以吧一个机架上的机器划分在一个az中，划分az是为了提高容灾性和提供廉价的隔离服务。选择不同的region主要考虑那个region靠近你的用户群体。
+
+什么是aggregate hosthost aggregate 是管理员用来根据硬件资源的某一属">
 <meta property="og:type" content="article">
-<meta property="og:title" content="利用varant搭建跨平台开发环境">
-<meta property="og:url" content="http://yoursite.com/2015/08/07/setup-cross-platform-dev-env-with-vagrant/index.html">
+<meta property="og:title" content="openstack中的可用域的配置">
+<meta property="og:url" content="http://yoursite.com/2015/09/28/openstack-availability-zone/index.html">
 <meta property="og:site_name" content="kevin的博客">
-<meta property="og:description" content="什么是vagrantvagrant是一款构建虚拟开发环境的功能。可以使用vagrant封装一个标准的linux开发环境，然后分发给开发团队的成员。这样其他成员就可以在自己喜欢的桌面系统进行开发，而代码执行却可以在统一的环境，非常的便利。
-vagrant环境准备
-安装 virtualBox
-下载安装vagrant
-下载官方封装好的基础镜像 (比如ubuntu)
-添加镜像到vagrant $ vagr">
-<meta property="og:updated_time" content="2015-08-07T09:27:49.000Z">
+<meta property="og:description" content="前言
+什么使availablitiy_zoneaz 是用户可见的,用来手动的指定VM运行在哪些Host上. az 是在region范围内再次切分，例如可以吧一个机架上的机器划分在一个az中，划分az是为了提高容灾性和提供廉价的隔离服务。选择不同的region主要考虑那个region靠近你的用户群体。
+
+什么是aggregate hosthost aggregate 是管理员用来根据硬件资源的某一属">
+<meta property="og:updated_time" content="2015-09-28T02:06:55.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="利用varant搭建跨平台开发环境">
-<meta name="twitter:description" content="什么是vagrantvagrant是一款构建虚拟开发环境的功能。可以使用vagrant封装一个标准的linux开发环境，然后分发给开发团队的成员。这样其他成员就可以在自己喜欢的桌面系统进行开发，而代码执行却可以在统一的环境，非常的便利。
-vagrant环境准备
-安装 virtualBox
-下载安装vagrant
-下载官方封装好的基础镜像 (比如ubuntu)
-添加镜像到vagrant $ vagr">
+<meta name="twitter:title" content="openstack中的可用域的配置">
+<meta name="twitter:description" content="前言
+什么使availablitiy_zoneaz 是用户可见的,用来手动的指定VM运行在哪些Host上. az 是在region范围内再次切分，例如可以吧一个机架上的机器划分在一个az中，划分az是为了提高容灾性和提供廉价的隔离服务。选择不同的region主要考虑那个region靠近你的用户群体。
+
+什么是aggregate hosthost aggregate 是管理员用来根据硬件资源的某一属">
 
     
     <link rel="alternative" href="/atom.xml" title="kevin的博客" type="application/atom+xml">
@@ -96,14 +90,14 @@ vagrant环境准备
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/08/07/setup-cross-platform-dev-env-with-vagrant/" title="利用varant搭建跨平台开发环境" itemprop="url">利用varant搭建跨平台开发环境</a>
+      <a href="/2015/09/28/openstack-availability-zone/" title="openstack中的可用域的配置" itemprop="url">openstack中的可用域的配置</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
 		
   <p class="article-time">
-    <time datetime="2015-08-07T09:10:15.000Z" itemprop="datePublished"> 发表于 2015-08-07</time>
+    <time datetime="2015-09-28T01:31:14.000Z" itemprop="datePublished"> 发表于 2015-09-28</time>
     
   </p>
 </header>
@@ -112,50 +106,53 @@ vagrant环境准备
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是vagrant"><span class="toc-number">1.</span> <span class="toc-text">什么是vagrant</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant环境准备"><span class="toc-number">2.</span> <span class="toc-text">vagrant环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初始化开发环境"><span class="toc-number">3.</span> <span class="toc-text">初始化开发环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant的功能"><span class="toc-number">4.</span> <span class="toc-text">vagrant的功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant_常用命令"><span class="toc-number">5.</span> <span class="toc-text">vagrant 常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">6.</span> <span class="toc-text">参考链接</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#G版本的实现"><span class="toc-number">2.</span> <span class="toc-text">G版本的实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实际使用"><span class="toc-number">3.</span> <span class="toc-text">实际使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">4.</span> <span class="toc-text">参考链接</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="什么是vagrant">什么是vagrant</h2><p><a href="https://www.vagrantup.com" target="_blank" rel="external">vagrant</a>是一款构建虚拟开发环境的功能。可以使用vagrant封装一个标准的linux开发环境，然后分发给开发团队的成员。这样其他成员就可以在自己喜欢的桌面系统进行开发，而代码执行却可以在统一的环境，非常的便利。</p>
-<h2 id="vagrant环境准备">vagrant环境准备</h2><ol>
-<li>安装 <a href="www.virtualbox.org">virtualBox</a></li>
-<li>下载安装vagrant</li>
-<li>下载官方封装好的基础镜像 (比如ubuntu)</li>
-<li>添加镜像到vagrant <code>$ vagrant box add trusty /path/to/trusty.box</code></li>
+		<h2 id="前言">前言</h2><ol>
+<li><p>什么使availablitiy_zone<br>az 是用户可见的,用来手动的指定VM运行在哪些Host上. az 是在region范围内再次切分，例如可以吧一个机架上的机器划分在一个az中，划分az是为了提高容灾性和提供廉价的隔离服务。选择不同的region主要考虑那个region靠近你的用户群体。</p>
+</li>
+<li><p>什么是aggregate host<br>host aggregate 是管理员用来根据硬件资源的某一属性对硬件进行划分的功能,只对管理员可见. 其主要功能就是实现根据某一属性来划分物理机,比如按照地理位置,使用固态硬盘的机器,内存超过32G的机器,根据这些指标来构成一个Host Group</p>
+</li>
 </ol>
-<h2 id="初始化开发环境">初始化开发环境</h2><figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="char">$ </span>cd ~/dev</span><br><span class="line"><span class="char">$ </span>vagrant init trusty</span><br><span class="line"><span class="char">$ </span>vagrant up</span><br></pre></td></tr></table></figure>
-<p>看到终端显示启动完成以后，就可以通过ssh登录到虚拟机了<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vagrant ssh </span><br><span class="line"><span class="variable">$ </span>cd /vagrant   <span class="comment"># 切换到开发目录，这里的目录对应host机器上的～/dev目录</span></span><br></pre></td></tr></table></figure></p>
+<p>在创建一个VM的时候,可以选择一个可用域,这样可以使创建的虚拟机位于可用域的Host机器上. 那么如何配置一个Host属于那个Availability Zone呢?</p>
+<h2 id="G版本的实现">G版本的实现</h2><p>在G版本中Service表中不在保存Availability_zone字段,配置项node_available_zone也不在使用.那么这时,如何确定一个host属于那个zone呢?</p>
+<p>G版中,默认情况下,对Nova的服务分为两类,一类使Controller节点的服务进程,如nova-api, nova-scheduler, nova-conductor等,另一类使计算节点的进程, nova-computer. 对于第一类服务,默认的zone使配置项internal_service_availability_zone, 而nova-computer所属的zone配置项default_available_zone决定.</p>
 <a id="more"></a>
-<h2 id="vagrant的功能">vagrant的功能</h2><p>vagrant 初始化成功以后，会在初始化目录生产一个 <code>Vagrantfile</code>的配置文件，可以修改配置文件进行个性化定制</p>
-<ol>
-<li><p>共享host文件到VM中<br>默认情况下host会共享当前的文件夹到VM中的<code>/vargrant</code>下。 打开<code>Vagrantfile</code>,将下面这行注释去掉或者复制来增加新的共享文件<br><code>config.vm.sync_folder &quot;../data&quot;, &quot;/vagrant_data&quot;</code></p>
+<p>社区的开发人员意识到,让管理员通过配置的方式管理zone不太合适,不够灵活.因此在G版中,创建一个Host-Aggregate可以指定一个availablity_zone</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@node-15 ~]# nova <span class="operator"><span class="keyword">help</span> <span class="keyword">aggregate</span>-<span class="keyword">create</span></span><br><span class="line"><span class="keyword">usage</span>: nova <span class="keyword">aggregate</span>-<span class="keyword">create</span> &lt;<span class="keyword">name</span>&gt; [&lt;<span class="keyword">availability</span>-zone&gt;]</span><br><span class="line"></span><br><span class="line"><span class="keyword">Create</span> a <span class="keyword">new</span> <span class="keyword">aggregate</span> <span class="keyword">with</span> the specified details.</span><br><span class="line"></span><br><span class="line">Positional arguments:</span><br><span class="line">  &lt;<span class="keyword">name</span>&gt;               <span class="keyword">Name</span> <span class="keyword">of</span> <span class="keyword">aggregate</span>.</span><br><span class="line">  &lt;<span class="keyword">availability</span>-zone&gt;  The <span class="keyword">availability</span> zone <span class="keyword">of</span> the <span class="keyword">aggregate</span> (optional).</span></span><br></pre></td></tr></table></figure>
+<p>意思使创建一个host-aggregate,同时把它作为一个zone,此时aggregate=zone. 大家知道,aggregate使管理员可见,普通用户不可以见的对象,这个改变,可以使普通用户通过Zone的方式来使用Aggregate.</p>
+<p>创建完aggregate之后,项aggregate中增加主机时,该主机就自动属于aggregate表示的zone.</p>
+<p>因此，在G版，可以认为aggregate取代了zone，但同时又不影响aggregate与flavor的配合使用，因为这是两个调度层面。同时又要注意，一个主机可以加入多个aggregate中，所以G版中一个主机可以同时属于多个Availability Zone，这一点与F版也不同。</p>
+<h2 id="实际使用">实际使用</h2><ol>
+<li><p>创建aggregate,制定zone</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># nova aggregate-create aggregate_name az1</span></span><br><span class="line"><span class="preprocessor"># nova aggregate-list</span></span><br></pre></td></tr></table></figure>
 </li>
-<li><p>端口映射<br>vagrant默认使用端口映射方式将VM的端口映射到本地，从而实现类是<code>http://localhost:80</code>这种访问方式，更方便的方法是增加host-only网卡模式。打开<code>Vagrantfile</code>将下面这行注释去掉或者修改<br><code>config.vm.network :private_network, ip: &quot;192.168.33.10&quot;</code><br>重启虚拟机就是可以使用上面的IP地址进行访问VM了</p>
-</li>
-<li><p>privisioning – 自动配置VM当使用<code>vagrant up</code><br>可以通过shell脚本，或者puppet，chef，saltstack等配置管理工具，对vagrant开发环境进行自动配置。也可以使用<code>vagrant reload --provision</code>对已经运行过的VM进行快速的provision(将省略init中的import步骤)<br>使用shell脚本安装Apache。在Vagrant目录下创建booststrap.sh</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/usr/bin/env bash</span><br><span class="line"></span></span><br><span class="line">apt-get update</span><br><span class="line">apt-get install -y apache2</span><br><span class="line"><span class="keyword">if</span> ! [ -L /var/www ]; <span class="keyword">then</span></span><br><span class="line">   rm -rf /var/www</span><br><span class="line">   ln -fs /vargant /var/www</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<li><p>添加主机</p>
 </li>
 </ol>
-<p>配置vagrant当setup开发机器的时候运行bootstrap脚本。修改<code>Vagrantfile</code><br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">config<span class="class">.vm</span><span class="class">.provision</span> :shell, path: <span class="string">"bootstrap.sh"</span></span><br></pre></td></tr></table></figure></p>
-<p>puppet, chef privision方法请参考<code>Vagrantfile</code></p>
-<h2 id="vagrant_常用命令">vagrant 常用命令</h2><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vagrant init              <span class="comment"># inint VM</span></span><br><span class="line"><span class="variable">$ </span>vagrant up                <span class="comment"># start VM</span></span><br><span class="line"><span class="variable">$ </span>vagrant halt              <span class="comment"># stop VM</span></span><br><span class="line"><span class="variable">$ </span>vagrant reload            <span class="comment"># restart VM</span></span><br><span class="line"><span class="variable">$ </span>vagrant ssh               <span class="comment"># ssh login to VM</span></span><br><span class="line"><span class="variable">$ </span>vagrant status            <span class="comment"># view the VM status</span></span><br><span class="line"><span class="variable">$ </span>vagrant destroy           <span class="comment"># destroy the VM</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># nova aggregate-add-host aggregate_name computer1</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>查询主机与服务所属的zone</li>
+</ol>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># nova host-list</span></span><br><span class="line"><span class="preprocessor"># nova service-list</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>将一个主机加入另外一个aggregate,再次查询</li>
+</ol>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># nova aggregate-create aggregate2 az2</span></span><br><span class="line"><span class="preprocessor"># nova aggregate-add-host aggregate2 computer1</span></span><br><span class="line"><span class="preprocessor"># nova host-</span></span><br><span class="line"><span class="preprocessor"># nova service-list</span></span><br></pre></td></tr></table></figure>
 <h2 id="参考链接">参考链接</h2><ol>
-<li><a href="http://segmentfault.com/a/1190000000264347" target="_blank" rel="external">http://segmentfault.com/a/1190000000264347</a></li>
+<li><a href="http://blog.csdn.net/lynn_kong/article/details/9012451" title="Availability Zone" target="_blank" rel="external">F版和G版中的Availability Zone</a></li>
 </ol>
   
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/dev/">dev</a>
-</div>
-
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/vagrant/">vagrant</a>
+  <span></span> <a href="/tags/Openstack/">Openstack</a>
   </div>
 
 </div>
@@ -164,7 +161,7 @@ vagrant环境准备
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/08/07/setup-cross-platform-dev-env-with-vagrant/" data-title="利用varant搭建跨平台开发环境 | kevin的博客" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/09/28/openstack-availability-zone/" data-title="openstack中的可用域的配置 | kevin的博客" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -177,19 +174,11 @@ vagrant环境准备
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/08/12/NetEasy-Openstack-Devops/" title="(转载)基于网易的openstack部署运维实战">
-  <strong>上一篇：</strong><br/>
-  <span>
-  (转载)基于网易的openstack部署运维实战</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/08/07/2015-08-07-how-to-create-openstack-windows-image/"  title="如何创建openstack windows 虚拟机镜像">
+<a href="/2015/09/24/openstack-important-param/"  title="Openstack中的一些重要配置参数">
  <strong>下一篇：</strong><br/> 
- <span>如何创建openstack windows 虚拟机镜像
+ <span>Openstack中的一些重要配置参数
 </span>
 </a>
 </div>
@@ -198,7 +187,7 @@ vagrant环境准备
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/08/07/setup-cross-platform-dev-env-with-vagrant/" data-title="利用varant搭建跨平台开发环境" data-url="http://yoursite.com/2015/08/07/setup-cross-platform-dev-env-with-vagrant/"></div>
+	<div class="ds-thread" data-thread-key="2015/09/28/openstack-availability-zone/" data-title="openstack中的可用域的配置" data-url="http://yoursite.com/2015/09/28/openstack-availability-zone/"></div>
 </section>
 
 
@@ -209,7 +198,7 @@ vagrant环境准备
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是vagrant"><span class="toc-number">1.</span> <span class="toc-text">什么是vagrant</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant环境准备"><span class="toc-number">2.</span> <span class="toc-text">vagrant环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初始化开发环境"><span class="toc-number">3.</span> <span class="toc-text">初始化开发环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant的功能"><span class="toc-number">4.</span> <span class="toc-text">vagrant的功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant_常用命令"><span class="toc-number">5.</span> <span class="toc-text">vagrant 常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">6.</span> <span class="toc-text">参考链接</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#G版本的实现"><span class="toc-number">2.</span> <span class="toc-text">G版本的实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实际使用"><span class="toc-number">3.</span> <span class="toc-text">实际使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">4.</span> <span class="toc-text">参考链接</span></a></li></ol>
  
   </div>
 

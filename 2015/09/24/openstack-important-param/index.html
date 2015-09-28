@@ -5,38 +5,50 @@
   <meta charset="UTF-8">
   <meta name="baidu-site-verification" content="b5yHXUh5Ez" />
   
-    <title>利用varant搭建跨平台开发环境 | kevin的博客</title>
+    <title>Openstack中的一些重要配置参数 | kevin的博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="kevin">
     
 
     
-    <meta name="description" content="什么是vagrantvagrant是一款构建虚拟开发环境的功能。可以使用vagrant封装一个标准的linux开发环境，然后分发给开发团队的成员。这样其他成员就可以在自己喜欢的桌面系统进行开发，而代码执行却可以在统一的环境，非常的便利。
-vagrant环境准备
-安装 virtualBox
-下载安装vagrant
-下载官方封装好的基础镜像 (比如ubuntu)
-添加镜像到vagrant $ vagr">
+    <meta name="description" content="宿主资源隔离
+vcpu_pin_set = 4-$
+
+虚拟机vCPU的绑定范围,可以防止虚拟机争抢宿主机进程的CPU资源,建议预留前几个物理CPU,把后面的所有CPU分配给虚拟机使用,可以配合cgroup或者内核启动参数来实现宿主进程不占用虚拟机使用的哪些CPU资源
+
+cpu_allocation_ratio = 4.0
+
+物理CPU超售比例,默认是16倍,超线程也算作一个物理CPU
+
+ram_a">
 <meta property="og:type" content="article">
-<meta property="og:title" content="利用varant搭建跨平台开发环境">
-<meta property="og:url" content="http://yoursite.com/2015/08/07/setup-cross-platform-dev-env-with-vagrant/index.html">
+<meta property="og:title" content="Openstack中的一些重要配置参数">
+<meta property="og:url" content="http://yoursite.com/2015/09/24/openstack-important-param/index.html">
 <meta property="og:site_name" content="kevin的博客">
-<meta property="og:description" content="什么是vagrantvagrant是一款构建虚拟开发环境的功能。可以使用vagrant封装一个标准的linux开发环境，然后分发给开发团队的成员。这样其他成员就可以在自己喜欢的桌面系统进行开发，而代码执行却可以在统一的环境，非常的便利。
-vagrant环境准备
-安装 virtualBox
-下载安装vagrant
-下载官方封装好的基础镜像 (比如ubuntu)
-添加镜像到vagrant $ vagr">
-<meta property="og:updated_time" content="2015-08-07T09:27:49.000Z">
+<meta property="og:description" content="宿主资源隔离
+vcpu_pin_set = 4-$
+
+虚拟机vCPU的绑定范围,可以防止虚拟机争抢宿主机进程的CPU资源,建议预留前几个物理CPU,把后面的所有CPU分配给虚拟机使用,可以配合cgroup或者内核启动参数来实现宿主进程不占用虚拟机使用的哪些CPU资源
+
+cpu_allocation_ratio = 4.0
+
+物理CPU超售比例,默认是16倍,超线程也算作一个物理CPU
+
+ram_a">
+<meta property="og:updated_time" content="2015-09-24T02:01:42.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="利用varant搭建跨平台开发环境">
-<meta name="twitter:description" content="什么是vagrantvagrant是一款构建虚拟开发环境的功能。可以使用vagrant封装一个标准的linux开发环境，然后分发给开发团队的成员。这样其他成员就可以在自己喜欢的桌面系统进行开发，而代码执行却可以在统一的环境，非常的便利。
-vagrant环境准备
-安装 virtualBox
-下载安装vagrant
-下载官方封装好的基础镜像 (比如ubuntu)
-添加镜像到vagrant $ vagr">
+<meta name="twitter:title" content="Openstack中的一些重要配置参数">
+<meta name="twitter:description" content="宿主资源隔离
+vcpu_pin_set = 4-$
+
+虚拟机vCPU的绑定范围,可以防止虚拟机争抢宿主机进程的CPU资源,建议预留前几个物理CPU,把后面的所有CPU分配给虚拟机使用,可以配合cgroup或者内核启动参数来实现宿主进程不占用虚拟机使用的哪些CPU资源
+
+cpu_allocation_ratio = 4.0
+
+物理CPU超售比例,默认是16倍,超线程也算作一个物理CPU
+
+ram_a">
 
     
     <link rel="alternative" href="/atom.xml" title="kevin的博客" type="application/atom+xml">
@@ -96,14 +108,14 @@ vagrant环境准备
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/08/07/setup-cross-platform-dev-env-with-vagrant/" title="利用varant搭建跨平台开发环境" itemprop="url">利用varant搭建跨平台开发环境</a>
+      <a href="/2015/09/24/openstack-important-param/" title="Openstack中的一些重要配置参数" itemprop="url">Openstack中的一些重要配置参数</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
 		
   <p class="article-time">
-    <time datetime="2015-08-07T09:10:15.000Z" itemprop="datePublished"> 发表于 2015-08-07</time>
+    <time datetime="2015-09-24T01:20:45.000Z" itemprop="datePublished"> 发表于 2015-09-24</time>
     
   </p>
 </header>
@@ -112,50 +124,46 @@ vagrant环境准备
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是vagrant"><span class="toc-number">1.</span> <span class="toc-text">什么是vagrant</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant环境准备"><span class="toc-number">2.</span> <span class="toc-text">vagrant环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初始化开发环境"><span class="toc-number">3.</span> <span class="toc-text">初始化开发环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant的功能"><span class="toc-number">4.</span> <span class="toc-text">vagrant的功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant_常用命令"><span class="toc-number">5.</span> <span class="toc-text">vagrant 常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">6.</span> <span class="toc-text">参考链接</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#宿主资源隔离"><span class="toc-number">1.</span> <span class="toc-text">宿主资源隔离</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#验证"><span class="toc-number">1.1.</span> <span class="toc-text">验证</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<h2 id="什么是vagrant">什么是vagrant</h2><p><a href="https://www.vagrantup.com" target="_blank" rel="external">vagrant</a>是一款构建虚拟开发环境的功能。可以使用vagrant封装一个标准的linux开发环境，然后分发给开发团队的成员。这样其他成员就可以在自己喜欢的桌面系统进行开发，而代码执行却可以在统一的环境，非常的便利。</p>
-<h2 id="vagrant环境准备">vagrant环境准备</h2><ol>
-<li>安装 <a href="www.virtualbox.org">virtualBox</a></li>
-<li>下载安装vagrant</li>
-<li>下载官方封装好的基础镜像 (比如ubuntu)</li>
-<li>添加镜像到vagrant <code>$ vagrant box add trusty /path/to/trusty.box</code></li>
-</ol>
-<h2 id="初始化开发环境">初始化开发环境</h2><figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="char">$ </span>cd ~/dev</span><br><span class="line"><span class="char">$ </span>vagrant init trusty</span><br><span class="line"><span class="char">$ </span>vagrant up</span><br></pre></td></tr></table></figure>
-<p>看到终端显示启动完成以后，就可以通过ssh登录到虚拟机了<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vagrant ssh </span><br><span class="line"><span class="variable">$ </span>cd /vagrant   <span class="comment"># 切换到开发目录，这里的目录对应host机器上的～/dev目录</span></span><br></pre></td></tr></table></figure></p>
-<a id="more"></a>
-<h2 id="vagrant的功能">vagrant的功能</h2><p>vagrant 初始化成功以后，会在初始化目录生产一个 <code>Vagrantfile</code>的配置文件，可以修改配置文件进行个性化定制</p>
-<ol>
-<li><p>共享host文件到VM中<br>默认情况下host会共享当前的文件夹到VM中的<code>/vargrant</code>下。 打开<code>Vagrantfile</code>,将下面这行注释去掉或者复制来增加新的共享文件<br><code>config.vm.sync_folder &quot;../data&quot;, &quot;/vagrant_data&quot;</code></p>
-</li>
-<li><p>端口映射<br>vagrant默认使用端口映射方式将VM的端口映射到本地，从而实现类是<code>http://localhost:80</code>这种访问方式，更方便的方法是增加host-only网卡模式。打开<code>Vagrantfile</code>将下面这行注释去掉或者修改<br><code>config.vm.network :private_network, ip: &quot;192.168.33.10&quot;</code><br>重启虚拟机就是可以使用上面的IP地址进行访问VM了</p>
-</li>
-<li><p>privisioning – 自动配置VM当使用<code>vagrant up</code><br>可以通过shell脚本，或者puppet，chef，saltstack等配置管理工具，对vagrant开发环境进行自动配置。也可以使用<code>vagrant reload --provision</code>对已经运行过的VM进行快速的provision(将省略init中的import步骤)<br>使用shell脚本安装Apache。在Vagrant目录下创建booststrap.sh</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/usr/bin/env bash</span><br><span class="line"></span></span><br><span class="line">apt-get update</span><br><span class="line">apt-get install -y apache2</span><br><span class="line"><span class="keyword">if</span> ! [ -L /var/www ]; <span class="keyword">then</span></span><br><span class="line">   rm -rf /var/www</span><br><span class="line">   ln -fs /vargant /var/www</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>配置vagrant当setup开发机器的时候运行bootstrap脚本。修改<code>Vagrantfile</code><br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">config<span class="class">.vm</span><span class="class">.provision</span> :shell, path: <span class="string">"bootstrap.sh"</span></span><br></pre></td></tr></table></figure></p>
-<p>puppet, chef privision方法请参考<code>Vagrantfile</code></p>
-<h2 id="vagrant_常用命令">vagrant 常用命令</h2><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vagrant init              <span class="comment"># inint VM</span></span><br><span class="line"><span class="variable">$ </span>vagrant up                <span class="comment"># start VM</span></span><br><span class="line"><span class="variable">$ </span>vagrant halt              <span class="comment"># stop VM</span></span><br><span class="line"><span class="variable">$ </span>vagrant reload            <span class="comment"># restart VM</span></span><br><span class="line"><span class="variable">$ </span>vagrant ssh               <span class="comment"># ssh login to VM</span></span><br><span class="line"><span class="variable">$ </span>vagrant status            <span class="comment"># view the VM status</span></span><br><span class="line"><span class="variable">$ </span>vagrant destroy           <span class="comment"># destroy the VM</span></span><br></pre></td></tr></table></figure>
-<h2 id="参考链接">参考链接</h2><ol>
-<li><a href="http://segmentfault.com/a/1190000000264347" target="_blank" rel="external">http://segmentfault.com/a/1190000000264347</a></li>
-</ol>
+		<h2 id="宿主资源隔离">宿主资源隔离</h2><blockquote>
+<p>vcpu_pin_set = 4-$</p>
+</blockquote>
+<p>虚拟机vCPU的绑定范围,可以防止虚拟机争抢宿主机进程的CPU资源,建议预留前几个物理CPU,把后面的所有CPU分配给虚拟机使用,可以配合cgroup或者内核启动参数来实现宿主进程不占用虚拟机使用的哪些CPU资源</p>
+<blockquote>
+<p>cpu_allocation_ratio = 4.0</p>
+</blockquote>
+<p>物理CPU超售比例,默认是16倍,超线程也算作一个物理CPU</p>
+<blockquote>
+<p>ram_allocation_ratio = 1.0</p>
+</blockquote>
+<p>内存分配超售比例,默认是1.5倍,生产环境不建议开启超售</p>
+<blockquote>
+<p>reserved_host_memory_mb = 4096</p>
+</blockquote>
+<p>内存预留量,这部分内存不能被虚拟机使用</p>
+<blockquote>
+<p>reserverd_host_disk_mb = 10240</p>
+</blockquote>
+<p>磁盘预留空间,这部分空间不能被虚拟机使用</p>
+<blockquote>
+<p>multi_host = True</p>
+</blockquote>
+<p>是否开启nova-network的多节点模式,如果需要多节点部署,则该项需要设置为True</p>
+<h3 id="验证">验证</h3><p>校验虚拟机的vCPU亲和性,检查CPU是否成功隔离,创建一个虚机,然后通过libvirt参看</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ virsh list</span><br><span class="line"> Id    Name                           State</span><br><span class="line"> ----------------------------------------------------</span><br><span class="line">  42   <span class="instruction"> instance-00000553 </span>             running</span><br><span class="line">  43   <span class="instruction"> instance-00000596 </span>             running</span><br><span class="line"></span><br><span class="line">$ virsh vcpuinfo 42</span><br><span class="line">VCPU:           0</span><br><span class="line">CPU:            4</span><br><span class="line">State:          running</span><br><span class="line">CPU time:       324210.2s</span><br><span class="line">CPU Affinity:   ----yyyyyyyyyyyyyyyyyyyyyyyyyyyy</span><br></pre></td></tr></table></figure>
+<p>这就说明，虚拟机的vCPU对物理CPU的前四个核非亲和，他一般就会在后面的物理CPU中调度执行各种服务。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/dev/">dev</a>
-</div>
-
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/vagrant/">vagrant</a>
+  <span></span> <a href="/tags/Devops/">Devops</a><a href="/tags/Openstack/">Openstack</a>
   </div>
 
 </div>
@@ -164,7 +172,7 @@ vagrant环境准备
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/08/07/setup-cross-platform-dev-env-with-vagrant/" data-title="利用varant搭建跨平台开发环境 | kevin的博客" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/09/24/openstack-important-param/" data-title="Openstack中的一些重要配置参数 | kevin的博客" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -178,18 +186,18 @@ vagrant环境准备
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/08/12/NetEasy-Openstack-Devops/" title="(转载)基于网易的openstack部署运维实战">
+ <a href="/2015/09/28/openstack-availability-zone/" title="openstack中的可用域的配置">
   <strong>上一篇：</strong><br/>
   <span>
-  (转载)基于网易的openstack部署运维实战</span>
+  openstack中的可用域的配置</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/08/07/2015-08-07-how-to-create-openstack-windows-image/"  title="如何创建openstack windows 虚拟机镜像">
+<a href="/2015/09/11/openstack-quick-start/"  title="Openstack私有云快速帮助">
  <strong>下一篇：</strong><br/> 
- <span>如何创建openstack windows 虚拟机镜像
+ <span>Openstack私有云快速帮助
 </span>
 </a>
 </div>
@@ -198,7 +206,7 @@ vagrant环境准备
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/08/07/setup-cross-platform-dev-env-with-vagrant/" data-title="利用varant搭建跨平台开发环境" data-url="http://yoursite.com/2015/08/07/setup-cross-platform-dev-env-with-vagrant/"></div>
+	<div class="ds-thread" data-thread-key="2015/09/24/openstack-important-param/" data-title="Openstack中的一些重要配置参数" data-url="http://yoursite.com/2015/09/24/openstack-important-param/"></div>
 </section>
 
 
@@ -209,7 +217,7 @@ vagrant环境准备
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是vagrant"><span class="toc-number">1.</span> <span class="toc-text">什么是vagrant</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant环境准备"><span class="toc-number">2.</span> <span class="toc-text">vagrant环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初始化开发环境"><span class="toc-number">3.</span> <span class="toc-text">初始化开发环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant的功能"><span class="toc-number">4.</span> <span class="toc-text">vagrant的功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant_常用命令"><span class="toc-number">5.</span> <span class="toc-text">vagrant 常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">6.</span> <span class="toc-text">参考链接</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#宿主资源隔离"><span class="toc-number">1.</span> <span class="toc-text">宿主资源隔离</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#验证"><span class="toc-number">1.1.</span> <span class="toc-text">验证</span></a></li></ol></li></ol>
  
   </div>
 

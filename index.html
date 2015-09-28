@@ -82,6 +82,157 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/09/28/openstack-availability-zone/" title="openstack中的可用域的配置" itemprop="url">openstack中的可用域的配置</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-28T01:31:14.000Z" itemprop="datePublished"> 发表于 2015-09-28</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="前言">前言</h2><ol>
+<li><p>什么使availablitiy_zone<br>az 是用户可见的,用来手动的指定VM运行在哪些Host上. az 是在region范围内再次切分，例如可以吧一个机架上的机器划分在一个az中，划分az是为了提高容灾性和提供廉价的隔离服务。选择不同的region主要考虑那个region靠近你的用户群体。</p>
+</li>
+<li><p>什么是aggregate host<br>host aggregate 是管理员用来根据硬件资源的某一属性对硬件进行划分的功能,只对管理员可见. 其主要功能就是实现根据某一属性来划分物理机,比如按照地理位置,使用固态硬盘的机器,内存超过32G的机器,根据这些指标来构成一个Host Group</p>
+</li>
+</ol>
+<p>在创建一个VM的时候,可以选择一个可用域,这样可以使创建的虚拟机位于可用域的Host机器上. 那么如何配置一个Host属于那个Availability Zone呢?</p>
+<h2 id="G版本的实现">G版本的实现</h2><p>在G版本中Service表中不在保存Availability_zone字段,配置项node_available_zone也不在使用.那么这时,如何确定一个host属于那个zone呢?</p>
+<p>G版中,默认情况下,对Nova的服务分为两类,一类使Controller节点的服务进程,如nova-api, nova-scheduler, nova-conductor等,另一类使计算节点的进程, nova-computer. 对于第一类服务,默认的zone使配置项internal_service_availability_zone, 而nova-computer所属的zone配置项default_available_zone决定.</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/09/28/openstack-availability-zone/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Openstack/">Openstack</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/28/openstack-availability-zone/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/28/openstack-availability-zone/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/24/openstack-important-param/" title="Openstack中的一些重要配置参数" itemprop="url">Openstack中的一些重要配置参数</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-24T01:20:45.000Z" itemprop="datePublished"> 发表于 2015-09-24</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="宿主资源隔离">宿主资源隔离</h2><blockquote>
+<p>vcpu_pin_set = 4-$</p>
+</blockquote>
+<p>虚拟机vCPU的绑定范围,可以防止虚拟机争抢宿主机进程的CPU资源,建议预留前几个物理CPU,把后面的所有CPU分配给虚拟机使用,可以配合cgroup或者内核启动参数来实现宿主进程不占用虚拟机使用的哪些CPU资源</p>
+<blockquote>
+<p>cpu_allocation_ratio = 4.0</p>
+</blockquote>
+<p>物理CPU超售比例,默认是16倍,超线程也算作一个物理CPU</p>
+<blockquote>
+<p>ram_allocation_ratio = 1.0</p>
+</blockquote>
+<p>内存分配超售比例,默认是1.5倍,生产环境不建议开启超售</p>
+<blockquote>
+<p>reserved_host_memory_mb = 4096</p>
+</blockquote>
+<p>内存预留量,这部分内存不能被虚拟机使用</p>
+<blockquote>
+<p>reserverd_host_disk_mb = 10240</p>
+</blockquote>
+<p>磁盘预留空间,这部分空间不能被虚拟机使用</p>
+<blockquote>
+<p>multi_host = True</p>
+</blockquote>
+<p>是否开启nova-network的多节点模式,如果需要多节点部署,则该项需要设置为True</p>
+<h3 id="验证">验证</h3><p>校验虚拟机的vCPU亲和性,检查CPU是否成功隔离,创建一个虚机,然后通过libvirt参看</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ virsh list</span><br><span class="line"> Id    Name                           State</span><br><span class="line"> ----------------------------------------------------</span><br><span class="line">  42   <span class="instruction"> instance-00000553 </span>             running</span><br><span class="line">  43   <span class="instruction"> instance-00000596 </span>             running</span><br><span class="line"></span><br><span class="line">$ virsh vcpuinfo 42</span><br><span class="line">VCPU:           0</span><br><span class="line">CPU:            4</span><br><span class="line">State:          running</span><br><span class="line">CPU time:       324210.2s</span><br><span class="line">CPU Affinity:   ----yyyyyyyyyyyyyyyyyyyyyyyyyyyy</span><br></pre></td></tr></table></figure>
+<p>这就说明，虚拟机的vCPU对物理CPU的前四个核非亲和，他一般就会在后面的物理CPU中调度执行各种服务。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Devops/">Devops</a><a href="/tags/Openstack/">Openstack</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/24/openstack-important-param/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/24/openstack-important-param/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/09/11/openstack-quick-start/" title="Openstack私有云快速帮助" itemprop="url">Openstack私有云快速帮助</a>
   </h1>
   <p class="article-author">By
@@ -700,15 +851,11 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/Openstack/" title="Openstack">Openstack<sup>5</sup></a></li>
+				<li><a href="/tags/Openstack/" title="Openstack">Openstack<sup>7</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/image/" title="image">image<sup>1</sup></a></li>
+				<li><a href="/tags/Devops/" title="Devops">Devops<sup>2</sup></a></li>
 			
 		
 			
@@ -724,7 +871,11 @@
 			
 		
 			
-				<li><a href="/tags/Devops/" title="Devops">Devops<sup>1</sup></a></li>
+				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/image/" title="image">image<sup>1</sup></a></li>
 			
 		
 		</ul>
