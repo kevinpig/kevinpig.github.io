@@ -1,0 +1,523 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="baidu-site-verification" content="b5yHXUh5Ez" />
+  
+    <title>openstack中的Qos功能 | kevin的博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="kevin">
+    
+
+    
+    <meta name="description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些使摘抄自互联网,如有雷同,实属荣幸.
+需求在云计算数据中心,一台宿主机上面要跑几十台的VM,如果一台VM运行了大量IO,或者CPU密集的任务,如何保证其他的VM的服务质量呢? 这样我们就需要限制VM的能力,来保证Qos.
+实现1. CPU Qos在Openstack Grizzly版本中已经继承了一个叫做 Instance Resource Q">
+<meta property="og:type" content="article">
+<meta property="og:title" content="openstack中的Qos功能">
+<meta property="og:url" content="http://yoursite.com/2015/09/30/openstack-qos/index.html">
+<meta property="og:site_name" content="kevin的博客">
+<meta property="og:description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些使摘抄自互联网,如有雷同,实属荣幸.
+需求在云计算数据中心,一台宿主机上面要跑几十台的VM,如果一台VM运行了大量IO,或者CPU密集的任务,如何保证其他的VM的服务质量呢? 这样我们就需要限制VM的能力,来保证Qos.
+实现1. CPU Qos在Openstack Grizzly版本中已经继承了一个叫做 Instance Resource Q">
+<meta property="og:updated_time" content="2015-09-30T02:56:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="openstack中的Qos功能">
+<meta name="twitter:description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些使摘抄自互联网,如有雷同,实属荣幸.
+需求在云计算数据中心,一台宿主机上面要跑几十台的VM,如果一台VM运行了大量IO,或者CPU密集的任务,如何保证其他的VM的服务质量呢? 这样我们就需要限制VM的能力,来保证Qos.
+实现1. CPU Qos在Openstack Grizzly版本中已经继承了一个叫做 Instance Resource Q">
+
+    
+    <link rel="alternative" href="/atom.xml" title="kevin的博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="kevin的博客" title="kevin的博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="kevin的博客">kevin的博客</a></h1>
+				<h2 class="blog-motto">记录工作生活中的点滴</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/30/openstack-qos/" title="openstack中的Qos功能" itemprop="url">openstack中的Qos功能</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-30T02:08:54.000Z" itemprop="datePublished"> 发表于 2015-09-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#需求"><span class="toc-number">1.</span> <span class="toc-text">需求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现"><span class="toc-number">2.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-_CPU_Qos"><span class="toc-number">2.1.</span> <span class="toc-text">1. CPU Qos</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-_Disk_Qos"><span class="toc-number">2.2.</span> <span class="toc-text">2. Disk Qos</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参看链接"><span class="toc-number">3.</span> <span class="toc-text">参看链接</span></a></li></ol>
+		
+		</div>
+		
+		<p>声明:<br>本博客欢迎转发<br>内容系本人学习, 研究和总结,有些使摘抄自互联网,如有雷同,实属荣幸.</p>
+<h2 id="需求">需求</h2><p>在云计算数据中心,一台宿主机上面要跑几十台的VM,如果一台VM运行了大量IO,或者CPU密集的任务,如何保证其他的VM的服务质量呢? 这样我们就需要限制VM的能力,来保证Qos.</p>
+<h2 id="实现">实现</h2><h3 id="1-_CPU_Qos">1. CPU Qos</h3><p>在Openstack Grizzly版本中已经继承了一个叫做 <a href="https://wiki.openstack.org/wiki/InstanceResourceQuota" target="_blank" rel="external">Instance Resource Quota</a>的功能.这个功能基于cgroup和tc实现了CPU,disk IO和network IO的限流功能.Openstack在设置Flavor的时候,可以将这些限流信息设定好.当启动虚机的时候,写入/var/lib/nova/instance/xxx/libvirt.xml中就可以了.</p>
+<p>我们可以大致测试一下,CPU的限制目前支持一下参数:</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">quota:</span>cpu_shares</span><br><span class="line"><span class="label">quota:</span>cpu_period</span><br><span class="line"><span class="label">quota:</span>cpu_quota</span><br></pre></td></tr></table></figure>
+<p>通过CLI创建Flavor,并设置flavor的extra specs, 当然也可以通过dashboard设置<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="comment">@node-15 rabbitmq]# nova flavor-create cpu-quota-test 88 512 1 1</span></span><br><span class="line">+----+----------------+-----------+------+-----------+------+-------+-------------+-----------+</span><br><span class="line">|<span class="string"> ID </span>|<span class="string"> Name           </span>|<span class="string"> Memory_MB </span>|<span class="string"> Disk </span>|<span class="string"> Ephemeral </span>|<span class="string"> Swap </span>|<span class="string"> VCPUs </span>|<span class="string"> RXTX_Factor </span>|<span class="string"> Is_Public </span>|</span><br><span class="line">+----+----------------+-----------+------+-----------+------+-------+-------------+-----------+</span><br><span class="line">|<span class="string"> 88 </span>|<span class="string"> cpu-quota-test </span>|<span class="string"> 512       </span>|<span class="string"> 1    </span>|<span class="string"> 0         </span>|<span class="string">      </span>|<span class="string"> 1     </span>|<span class="string"> 1.0         </span>|<span class="string"> True      </span>|</span><br><span class="line">+----+----------------+-----------+------+-----------+------+-------+-------------+-----------+</span><br><span class="line">[root<span class="comment">@node-15 rabbitmq]# nova flavor-key 88 set quota:cpu_period=5000</span></span><br><span class="line">[root<span class="comment">@node-15 rabbitmq]# nova flavor-key 88 set quota:cpu_quota=2500</span></span><br><span class="line">[root<span class="comment">@node-15 rabbitmq]# nova flavor-show 88</span></span><br><span class="line">+----------------------------+---------------------------------------------------------+</span><br><span class="line">|<span class="string"> Property                   </span>|<span class="string"> Value                                                   </span>|</span><br><span class="line">+----------------------------+---------------------------------------------------------+</span><br><span class="line">|<span class="string"> OS-FLV-DISABLED:disabled   </span>|<span class="string"> False                                                   </span>|</span><br><span class="line">|<span class="string"> OS-FLV-EXT-DATA:ephemeral  </span>|<span class="string"> 0                                                       </span>|</span><br><span class="line">|<span class="string"> disk                       </span>|<span class="string"> 1                                                       </span>|</span><br><span class="line">|<span class="string"> extra_specs                </span>|<span class="string"> &#123;"quota:cpu_period": "5000", "quota:cpu_quota": "2500"&#125; </span>|</span><br><span class="line">|<span class="string"> id                         </span>|<span class="string"> 88                                                      </span>|</span><br><span class="line">|<span class="string"> name                       </span>|<span class="string"> cpu-quota-test                                          </span>|</span><br><span class="line">|<span class="string"> os-flavor-access:is_public </span>|<span class="string"> True                                                    </span>|</span><br><span class="line">|<span class="string"> ram                        </span>|<span class="string"> 512                                                     </span>|</span><br><span class="line">|<span class="string"> rxtx_factor                </span>|<span class="string"> 1.0                                                     </span>|</span><br><span class="line">|<span class="string"> swap                       </span>|<span class="string">                                                         </span>|</span><br><span class="line">|<span class="string"> vcpus                      </span>|<span class="string"> 1                                                       </span>|</span><br><span class="line">+----------------------------+---------------------------------------------------------+</span><br></pre></td></tr></table></figure></p>
+<p>然后使用这个flavor启动虚拟机,在计算节点上查看cgroup如下:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@node-<span class="number">21</span> vcpu0]<span class="preprocessor"># pwd</span></span><br><span class="line">/cgroup/cpu/machine/instance-<span class="number">0000013</span>e.libvirt-qemu/vcpu0</span><br><span class="line">[root@node-<span class="number">21</span> vcpu0]<span class="preprocessor"># cat cpu.cfs_period_us</span></span><br><span class="line"><span class="number">5000</span></span><br><span class="line">[root@node-<span class="number">21</span> vcpu0]<span class="preprocessor"># cat cpu.cfs_quota_us</span></span><br><span class="line"><span class="number">2500</span></span><br></pre></td></tr></table></figure>
+<p>默认的cpu period 使100000,这里已经改成5000,说明起作用了</p>
+<p>参看libvirt.xml<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="comment">@node-21 7e52545a-5e37-4bab-8dd4-46c6b906436e]# pwd</span></span><br><span class="line">/var/lib/nova/instances/7e52545a-5e37-4bab-8dd4-46c6b906436e</span><br><span class="line"></span><br><span class="line">  <span class="variable">&lt;cputune&gt;</span></span><br><span class="line">    <span class="variable">&lt;quota&gt;</span>2500<span class="variable">&lt;/quota&gt;</span></span><br><span class="line">    <span class="variable">&lt;period&gt;</span>5000<span class="variable">&lt;/period&gt;</span></span><br><span class="line">  <span class="variable">&lt;/cputune&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="2-_Disk_Qos">2. Disk Qos</h3><p>通过以上方法设置了Disk IO的Qos参数,,在windows下面使用iometer测试,发现并不能正常的起作用.想想我们搭建的Openstack中使用了Ceph作为统一存储,所有的IO操作都是通过网络写入分布式文件系统中的. 这时候我们就的用另外的方法来保证Disk 的Qos</p>
+<p>Disk Qos的参数包含<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">total_bytes_sec</span><br><span class="line"><span class="built_in">read</span>_bytes_sec</span><br><span class="line">write_bytes_sec</span><br><span class="line">total_iops_sec</span><br><span class="line"><span class="built_in">read</span>_iops_sec</span><br><span class="line">write_iops_sec</span><br></pre></td></tr></table></figure></p>
+<p>测试</p>
+<ol>
+<li>首先创建在Cinder中创建一个Qos</li>
+<li>创建一个Volume Type</li>
+<li>然后将Qos关联到Volume type上<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@node-<span class="number">15</span> ~]<span class="comment"># cinder qos-create high-iops consumer="front-end" read_iops_sec=2000 write_iops_sec=1000</span></span><br><span class="line">+----------+---------------------------------------------------------+</span><br><span class="line">| Property |                          Value                          |</span><br><span class="line">+----------+---------------------------------------------------------+</span><br><span class="line">| consumer |                        front-end                        |</span><br><span class="line">|    id    |           <span class="number">48</span>fb2aa2-<span class="number">8</span>f80-<span class="number">4045</span>-b6cc-a051292986cc          |</span><br><span class="line">|   name   |                        high-iops                        |</span><br><span class="line">|  specs   | &#123;<span class="string">u'write_iops_sec'</span>: <span class="string">u'1000'</span>, <span class="string">u'read_iops_sec'</span>: <span class="string">u'2000'</span>&#125; |</span><br><span class="line">+----------+---------------------------------------------------------+</span><br><span class="line">[root@node-<span class="number">15</span> ~]<span class="comment"># cinder type-create high-iops</span></span><br><span class="line">+--------------------------------------+-----------+</span><br><span class="line">|                  ID                  |    Name   |</span><br><span class="line">+--------------------------------------+-----------+</span><br><span class="line">| <span class="number">7</span>b115bf5-b217-<span class="number">479</span>d-<span class="number">8821</span>-e9201965c756 | high-iops |</span><br><span class="line">+--------------------------------------+-----------+</span><br><span class="line">[root@node-<span class="number">15</span> ~]<span class="comment"># cinder qos-associate 48fb2aa2-8f80-4045-b6cc-a051292986cc  7b115bf5-b217-479d-8821-e9201965c756</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>完成后我们创建一个云硬盘,并将其attach到一个windows的虚机上. 使用iometer测试4k random 100% read发现最高IOPS为2000,使我们设置的Qos值,而当没有设置该Qos的时候,我们的虚机的IOPS可以达到20000.</p>
+<h2 id="参看链接">参看链接</h2><ol>
+<li><a href="http://ceph.com/planet/openstack-ceph-rbd-and-qos/" title="Ceph Rbd Qos" target="_blank" rel="external">Openstack Ceph rbd and Qos</a></li>
+<li><a href="http://blog.csdn.net/matt_mao/article/details/18356801" title="Openstack CPU/Disk/network QoS 功能" target="_blank" rel="external">Openstack CPU/Disk/network QoS 功能</a></li>
+<li><a href="http://www.xuebuyuan.com/2036978.html" title="Openstack中的网络QoS功能" target="_blank" rel="external">Openstack中的网络QoS功能</a></li>
+</ol>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Openstack/">Openstack</a><a href="/tags/Qos/">Qos</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/2015/09/30/openstack-qos/" data-title="openstack中的Qos功能 | kevin的博客" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/09/29/openstack-mirror-and-password/"  title="openstack-mirror-and-password">
+ <strong>下一篇：</strong><br/> 
+ <span>openstack-mirror-and-password
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/09/30/openstack-qos/" data-title="openstack中的Qos功能" data-url="http://yoursite.com/2015/09/30/openstack-qos/"></div>
+</section>
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#需求"><span class="toc-number">1.</span> <span class="toc-text">需求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现"><span class="toc-number">2.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-_CPU_Qos"><span class="toc-number">2.1.</span> <span class="toc-text">1. CPU Qos</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-_Disk_Qos"><span class="toc-number">2.2.</span> <span class="toc-text">2. Disk Qos</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参看链接"><span class="toc-number">3.</span> <span class="toc-text">参看链接</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/dev/" title="dev">dev<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/云计算/" title="云计算">云计算<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/转载/云计算/" title="云计算">云计算<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/转载/" title="转载">转载<sup>3</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Openstack/" title="Openstack">Openstack<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Devops/" title="Devops">Devops<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/vagrant/" title="vagrant">vagrant<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Qos/" title="Qos">Qos<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/emacs/" title="emacs">emacs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/image/" title="image">image<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m kevin in united-imaging.com. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="kevin">kevin</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"kevinpig"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

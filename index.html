@@ -82,6 +82,207 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/09/30/openstack-qos/" title="openstack中的Qos功能" itemprop="url">openstack中的Qos功能</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-30T02:08:54.000Z" itemprop="datePublished"> 发表于 2015-09-30</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>声明:<br>本博客欢迎转发<br>内容系本人学习, 研究和总结,有些使摘抄自互联网,如有雷同,实属荣幸.</p>
+<h2 id="需求">需求</h2><p>在云计算数据中心,一台宿主机上面要跑几十台的VM,如果一台VM运行了大量IO,或者CPU密集的任务,如何保证其他的VM的服务质量呢? 这样我们就需要限制VM的能力,来保证Qos.</p>
+<h2 id="实现">实现</h2><h3 id="1-_CPU_Qos">1. CPU Qos</h3><p>在Openstack Grizzly版本中已经继承了一个叫做 <a href="https://wiki.openstack.org/wiki/InstanceResourceQuota" target="_blank" rel="external">Instance Resource Quota</a>的功能.这个功能基于cgroup和tc实现了CPU,disk IO和network IO的限流功能.Openstack在设置Flavor的时候,可以将这些限流信息设定好.当启动虚机的时候,写入/var/lib/nova/instance/xxx/libvirt.xml中就可以了.</p>
+<p>我们可以大致测试一下,CPU的限制目前支持一下参数:</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">quota:</span>cpu_shares</span><br><span class="line"><span class="label">quota:</span>cpu_period</span><br><span class="line"><span class="label">quota:</span>cpu_quota</span><br></pre></td></tr></table></figure>
+<p>通过CLI创建Flavor,并设置flavor的extra specs, 当然也可以通过dashboard设置<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="comment">@node-15 rabbitmq]# nova flavor-create cpu-quota-test 88 512 1 1</span></span><br><span class="line">+----+----------------+-----------+------+-----------+------+-------+-------------+-----------+</span><br><span class="line">|<span class="string"> ID </span>|<span class="string"> Name           </span>|<span class="string"> Memory_MB </span>|<span class="string"> Disk </span>|<span class="string"> Ephemeral </span>|<span class="string"> Swap </span>|<span class="string"> VCPUs </span>|<span class="string"> RXTX_Factor </span>|<span class="string"> Is_Public </span>|</span><br><span class="line">+----+----------------+-----------+------+-----------+------+-------+-------------+-----------+</span><br><span class="line">|<span class="string"> 88 </span>|<span class="string"> cpu-quota-test </span>|<span class="string"> 512       </span>|<span class="string"> 1    </span>|<span class="string"> 0         </span>|<span class="string">      </span>|<span class="string"> 1     </span>|<span class="string"> 1.0         </span>|<span class="string"> True      </span>|</span><br><span class="line">+----+----------------+-----------+------+-----------+------+-------+-------------+-----------+</span><br><span class="line">[root<span class="comment">@node-15 rabbitmq]# nova flavor-key 88 set quota:cpu_period=5000</span></span><br><span class="line">[root<span class="comment">@node-15 rabbitmq]# nova flavor-key 88 set quota:cpu_quota=2500</span></span><br><span class="line">[root<span class="comment">@node-15 rabbitmq]# nova flavor-show 88</span></span><br><span class="line">+----------------------------+---------------------------------------------------------+</span><br><span class="line">|<span class="string"> Property                   </span>|<span class="string"> Value                                                   </span>|</span><br><span class="line">+----------------------------+---------------------------------------------------------+</span><br><span class="line">|<span class="string"> OS-FLV-DISABLED:disabled   </span>|<span class="string"> False                                                   </span>|</span><br><span class="line">|<span class="string"> OS-FLV-EXT-DATA:ephemeral  </span>|<span class="string"> 0                                                       </span>|</span><br><span class="line">|<span class="string"> disk                       </span>|<span class="string"> 1                                                       </span>|</span><br><span class="line">|<span class="string"> extra_specs                </span>|<span class="string"> &#123;"quota:cpu_period": "5000", "quota:cpu_quota": "2500"&#125; </span>|</span><br><span class="line">|<span class="string"> id                         </span>|<span class="string"> 88                                                      </span>|</span><br><span class="line">|<span class="string"> name                       </span>|<span class="string"> cpu-quota-test                                          </span>|</span><br><span class="line">|<span class="string"> os-flavor-access:is_public </span>|<span class="string"> True                                                    </span>|</span><br><span class="line">|<span class="string"> ram                        </span>|<span class="string"> 512                                                     </span>|</span><br><span class="line">|<span class="string"> rxtx_factor                </span>|<span class="string"> 1.0                                                     </span>|</span><br><span class="line">|<span class="string"> swap                       </span>|<span class="string">                                                         </span>|</span><br><span class="line">|<span class="string"> vcpus                      </span>|<span class="string"> 1                                                       </span>|</span><br><span class="line">+----------------------------+---------------------------------------------------------+</span><br></pre></td></tr></table></figure></p>
+<p>然后使用这个flavor启动虚拟机,在计算节点上查看cgroup如下:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@node-<span class="number">21</span> vcpu0]<span class="preprocessor"># pwd</span></span><br><span class="line">/cgroup/cpu/machine/instance-<span class="number">0000013</span>e.libvirt-qemu/vcpu0</span><br><span class="line">[root@node-<span class="number">21</span> vcpu0]<span class="preprocessor"># cat cpu.cfs_period_us</span></span><br><span class="line"><span class="number">5000</span></span><br><span class="line">[root@node-<span class="number">21</span> vcpu0]<span class="preprocessor"># cat cpu.cfs_quota_us</span></span><br><span class="line"><span class="number">2500</span></span><br></pre></td></tr></table></figure>
+<p>默认的cpu period 使100000,这里已经改成5000,说明起作用了</p>
+<p>参看libvirt.xml<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="comment">@node-21 7e52545a-5e37-4bab-8dd4-46c6b906436e]# pwd</span></span><br><span class="line">/var/lib/nova/instances/7e52545a-5e37-4bab-8dd4-46c6b906436e</span><br><span class="line"></span><br><span class="line">  <span class="variable">&lt;cputune&gt;</span></span><br><span class="line">    <span class="variable">&lt;quota&gt;</span>2500<span class="variable">&lt;/quota&gt;</span></span><br><span class="line">    <span class="variable">&lt;period&gt;</span>5000<span class="variable">&lt;/period&gt;</span></span><br><span class="line">  <span class="variable">&lt;/cputune&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="2-_Disk_Qos">2. Disk Qos</h3><p>通过以上方法设置了Disk IO的Qos参数,,在windows下面使用iometer测试,发现并不能正常的起作用.想想我们搭建的Openstack中使用了Ceph作为统一存储,所有的IO操作都是通过网络写入分布式文件系统中的. 这时候我们就的用另外的方法来保证Disk 的Qos</p>
+<p>Disk Qos的参数包含<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">total_bytes_sec</span><br><span class="line"><span class="built_in">read</span>_bytes_sec</span><br><span class="line">write_bytes_sec</span><br><span class="line">total_iops_sec</span><br><span class="line"><span class="built_in">read</span>_iops_sec</span><br><span class="line">write_iops_sec</span><br></pre></td></tr></table></figure></p>
+<p>测试</p>
+<ol>
+<li>首先创建在Cinder中创建一个Qos</li>
+<li>创建一个Volume Type</li>
+<li>然后将Qos关联到Volume type上<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@node-<span class="number">15</span> ~]<span class="comment"># cinder qos-create high-iops consumer="front-end" read_iops_sec=2000 write_iops_sec=1000</span></span><br><span class="line">+----------+---------------------------------------------------------+</span><br><span class="line">| Property |                          Value                          |</span><br><span class="line">+----------+---------------------------------------------------------+</span><br><span class="line">| consumer |                        front-end                        |</span><br><span class="line">|    id    |           <span class="number">48</span>fb2aa2-<span class="number">8</span>f80-<span class="number">4045</span>-b6cc-a051292986cc          |</span><br><span class="line">|   name   |                        high-iops                        |</span><br><span class="line">|  specs   | &#123;<span class="string">u'write_iops_sec'</span>: <span class="string">u'1000'</span>, <span class="string">u'read_iops_sec'</span>: <span class="string">u'2000'</span>&#125; |</span><br><span class="line">+----------+---------------------------------------------------------+</span><br><span class="line">[root@node-<span class="number">15</span> ~]<span class="comment"># cinder type-create high-iops</span></span><br><span class="line">+--------------------------------------+-----------+</span><br><span class="line">|                  ID                  |    Name   |</span><br><span class="line">+--------------------------------------+-----------+</span><br><span class="line">| <span class="number">7</span>b115bf5-b217-<span class="number">479</span>d-<span class="number">8821</span>-e9201965c756 | high-iops |</span><br><span class="line">+--------------------------------------+-----------+</span><br><span class="line">[root@node-<span class="number">15</span> ~]<span class="comment"># cinder qos-associate 48fb2aa2-8f80-4045-b6cc-a051292986cc  7b115bf5-b217-479d-8821-e9201965c756</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>完成后我们创建一个云硬盘,并将其attach到一个windows的虚机上. 使用iometer测试4k random 100% read发现最高IOPS为2000,使我们设置的Qos值,而当没有设置该Qos的时候,我们的虚机的IOPS可以达到20000.</p>
+<h2 id="参看链接">参看链接</h2><ol>
+<li><a href="http://ceph.com/planet/openstack-ceph-rbd-and-qos/" title="Ceph Rbd Qos" target="_blank" rel="external">Openstack Ceph rbd and Qos</a></li>
+<li><a href="http://blog.csdn.net/matt_mao/article/details/18356801" title="Openstack CPU/Disk/network QoS 功能" target="_blank" rel="external">Openstack CPU/Disk/network QoS 功能</a></li>
+<li><a href="http://www.xuebuyuan.com/2036978.html" title="Openstack中的网络QoS功能" target="_blank" rel="external">Openstack中的网络QoS功能</a></li>
+</ol>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Openstack/">Openstack</a><a href="/tags/Qos/">Qos</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/30/openstack-qos/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/30/openstack-qos/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/29/openstack-mirror-and-password/" title="openstack-mirror-and-password" itemprop="url">openstack-mirror-and-password</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-29T02:28:20.000Z" itemprop="datePublished"> 发表于 2015-09-29</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>声明:<br>本博客欢迎转发<br>内容系本人学习, 研究和总结,有些使摘抄自互联网,如有雷同,实属荣幸.</p>
+<p><a href="http://www.chenshake.com/openstack-mirror-and-password/" target="_blank" rel="external">http://www.chenshake.com/openstack-mirror-and-password/</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/29/openstack-mirror-and-password/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/29/openstack-mirror-and-password/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post&lt;&gt;" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/28/boot-vm-in-specify-host/" title="Openstack 决定虚机的宿主机" itemprop="url">Openstack 决定虚机的宿主机</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-28T07:37:40.000Z" itemprop="datePublished"> 发表于 2015-09-28</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>声明:<br>本博客欢迎转发<br>内容系本人学习, 研究和总结,有些是摘抄自互联网,如有雷同,实属荣幸.</p>
+<h2 id="需求">需求</h2><p>通常在一个云计算中心中,提供虚拟资源池计算能力的物理主机一般有成百上千个,因为业务的需求,我们需要将这些物理主机进行分组,以区分其本身的性质或者提供不同的服务. 我们研究的使Openstack,因此这里就讨论Openstack中Nova如果通过配置将虚拟机创建到指定的Host或者分组中.</p>
+<h2 id="实现原理">实现原理</h2><p>当你发起一个创建虚机的请求,nova收到你的请求并分析所携带的创建约束条件,然后过滤出满足条件的主机,并在这些主机上创建虚机,这个过程主要有nova-scheduler 实现的. 最有主机的选择过程实际上就两个步骤,过滤和称重.</p>
+<p><img src="http://docs.openstack.org/developer/nova/_images/filteringWorkflow1.png" alt="主机过滤"></p>
+<p>如上图,Filter Scheduler 首先得到未经过滤的主机列表,然后根据过滤属性,选择主机创建指定数目的虚拟机.</p>
+<p>Nova中已经实现了多种的过滤策略,开发者也可以根据自己的需求来实现自己的过滤策略.</p>
+<p>在/etc/nova/nova.conf中的scheduler_default_filter配置了起作用的filter</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/09/28/boot-vm-in-specify-host/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Openstack/">Openstack</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/28/boot-vm-in-specify-host/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/28/boot-vm-in-specify-host/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/09/28/openstack-availability-zone/" title="openstack中的可用域的配置" itemprop="url">openstack中的可用域的配置</a>
   </h1>
   <p class="article-author">By
@@ -96,7 +297,7 @@
     <div class="article-content">
         
         <h2 id="前言">前言</h2><ol>
-<li><p>什么使availablitiy_zone<br>az 是用户可见的,用来手动的指定VM运行在哪些Host上. az 是在region范围内再次切分，例如可以吧一个机架上的机器划分在一个az中，划分az是为了提高容灾性和提供廉价的隔离服务。选择不同的region主要考虑那个region靠近你的用户群体。</p>
+<li><p>什么是availablitiy_zone<br>az 是用户可见的,用来手动的指定VM运行在哪些Host上. az 是在region范围内再次切分，例如可以吧一个机架上的机器划分在一个az中，划分az是为了提高容灾性和提供廉价的隔离服务。选择不同的region主要考虑那个region靠近你的用户群体。</p>
 </li>
 <li><p>什么是aggregate host<br>host aggregate 是管理员用来根据硬件资源的某一属性对硬件进行划分的功能,只对管理员可见. 其主要功能就是实现根据某一属性来划分物理机,比如按照地理位置,使用固态硬盘的机器,内存超过32G的机器,根据这些指标来构成一个Host Group</p>
 </li>
@@ -600,218 +801,10 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/08/12/NetEasy-Openstack-Devops/" title="(转载)基于网易的openstack部署运维实战" itemprop="url">(转载)基于网易的openstack部署运维实战</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
-		
-  <p class="article-time">
-    <time datetime="2015-08-12T02:21:21.000Z" itemprop="datePublished"> 发表于 2015-08-12</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="OpenStack_简介">OpenStack 简介</h2><p>　　OpenStack 是一个开源的 IaaS 实现，它由一些相互关联的子项目组成，主要包括计算、存储、网络。由于以 Apache 协议发布，自 2010 年项目成立以来，超过 200 个公司加入了 OpenStack 项目，其中包括 AT&amp;T、AMD、Cisco、Dell、IBM、Intel、Red Hat 等。目前参与 OpenStack 项目的开发人员有 17,000+，来自 139 个国家，这一数字还在不断增长中。<br>　　OpenStack 兼容一部分 AWS 接口，同时为了提供更强大的功能，也提供 OpenStack 风格的接口（RESTFul API）。和其他开源 IaaS 相比，架构上松耦合、高可扩展、分布式、纯 Python 实现，以及友好活跃的社区使其大受欢迎，每半年一次的开发峰会也吸引了来自全世界的开发者、供应商和客户。<br>　　OpenStack 的主要子项目有：</p>
-<ul>
-<li>Compute（Nova）提供计算虚拟化服务，是 OpenStack 的核心，负责管理和创建虚拟机。它被设计成方便扩展，支持多种虚拟化技术，并且可以部署在标准硬件上。</li>
-<li>Object Storage（Swift）提供对象存储服务，是一个分布式，可扩展，多副本的存储系统。</li>
-<li>Block Storage（Cinder），提供块存储服务，为 OpenStack 的虚拟机提供持久的块级存储设备。支持多种存储后端，包括 Ceph，EMC 等。</li>
-<li>Networking（Neutron）提供网络虚拟化服务，是一个可拔插，可扩展，API 驱动的服务。</li>
-<li>Dashboard 提供了一个图形控制台服务，让用户方便地访问，使用和维护 OpenStack 中的资源</li>
-<li>Image（glance）提供镜像服务，它旨在发现，注册和交付虚拟机磁盘和镜像。支持多种后端。</li>
-<li>Telemetry（Ceilometer）提供用量统计服务，通过它可以方便地实现 OpenStack 计费功能。</li>
-<li>Orchestration（Heat）整合了 OpenStack 中的众多组件，类似 AWS 的 CloudFormation，让用户能够通过模板来管理资源。</li>
-<li>Database（Trove）基于 OpenStack 构建的 database-as-a-service。</li>
-</ul>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/08/12/NetEasy-Openstack-Devops/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
 
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/转载/">转载</a>►<a class="article-category-link" href="/categories/转载/云计算/">云计算</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Devops/">Devops</a><a href="/tags/Openstack/">Openstack</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/08/12/NetEasy-Openstack-Devops/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/12/NetEasy-Openstack-Devops/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/08/07/setup-cross-platform-dev-env-with-vagrant/" title="利用varant搭建跨平台开发环境" itemprop="url">利用varant搭建跨平台开发环境</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
-		
-  <p class="article-time">
-    <time datetime="2015-08-07T09:10:15.000Z" itemprop="datePublished"> 发表于 2015-08-07</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="什么是vagrant">什么是vagrant</h2><p><a href="https://www.vagrantup.com">vagrant</a>是一款构建虚拟开发环境的功能。可以使用vagrant封装一个标准的linux开发环境，然后分发给开发团队的成员。这样其他成员就可以在自己喜欢的桌面系统进行开发，而代码执行却可以在统一的环境，非常的便利。</p>
-<h2 id="vagrant环境准备">vagrant环境准备</h2><ol>
-<li>安装 <a href="www.virtualbox.org">virtualBox</a></li>
-<li>下载安装vagrant</li>
-<li>下载官方封装好的基础镜像 (比如ubuntu)</li>
-<li>添加镜像到vagrant <code>$ vagrant box add trusty /path/to/trusty.box</code></li>
-</ol>
-<h2 id="初始化开发环境">初始化开发环境</h2><figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="char">$ </span>cd ~/dev</span><br><span class="line"><span class="char">$ </span>vagrant init trusty</span><br><span class="line"><span class="char">$ </span>vagrant up</span><br></pre></td></tr></table></figure>
-<p>看到终端显示启动完成以后，就可以通过ssh登录到虚拟机了<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vagrant ssh </span><br><span class="line"><span class="variable">$ </span>cd /vagrant   <span class="comment"># 切换到开发目录，这里的目录对应host机器上的～/dev目录</span></span><br></pre></td></tr></table></figure></p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/08/07/setup-cross-platform-dev-env-with-vagrant/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/dev/">dev</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/vagrant/">vagrant</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/08/07/setup-cross-platform-dev-env-with-vagrant/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/07/setup-cross-platform-dev-env-with-vagrant/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/08/07/2015-08-07-how-to-create-openstack-windows-image/" title="如何创建openstack windows 虚拟机镜像" itemprop="url">如何创建openstack windows 虚拟机镜像</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
-		
-  <p class="article-time">
-    <time datetime="2015-08-07T02:57:39.000Z" itemprop="datePublished"> 发表于 2015-08-07</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="前言">前言</h2><p>　　本文以Ubuntu 14.04为例来介绍如何创建windows的openstack虚拟机镜像。安装之前的装备工作包括<br>　　1. 准备一个windows 2008的iso文件<br>　　2. 下载virtio-win的驱动文件<br>　　3. 下载cloud-init的安装程序</p>
-<h2 id="1-_创建镜像磁盘">1. 创建镜像磁盘</h2><p>创建一个windows镜像磁盘，raw格式，大小为15G<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ qemu-<span class="tag">img</span> create -f qcow2 winServer2008<span class="class">.img</span> <span class="number">15</span>G</span><br></pre></td></tr></table></figure></p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/08/07/2015-08-07-how-to-create-openstack-windows-image/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/云计算/">云计算</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Openstack/">Openstack</a><a href="/tags/image/">image</a><a href="/tags/windows/">windows</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/08/07/2015-08-07-how-to-create-openstack-windows-image/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/07/2015-08-07-how-to-create-openstack-windows-image/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
+  <nav id="page-nav" class="clearfix">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
+  </nav>
 
 </div>
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
@@ -851,7 +844,7 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/Openstack/" title="Openstack">Openstack<sup>7</sup></a></li>
+				<li><a href="/tags/Openstack/" title="Openstack">Openstack<sup>9</sup></a></li>
 			
 		
 			
@@ -860,6 +853,10 @@
 		
 			
 				<li><a href="/tags/vagrant/" title="vagrant">vagrant<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Qos/" title="Qos">Qos<sup>1</sup></a></li>
 			
 		
 			
