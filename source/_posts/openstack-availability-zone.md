@@ -6,7 +6,7 @@ tags:
 ---
 
 ## 前言
-1. 什么使availablitiy\_zone
+1. 什么是availablitiy\_zone
 az 是用户可见的,用来手动的指定VM运行在哪些Host上. az 是在region范围内再次切分，例如可以吧一个机架上的机器划分在一个az中，划分az是为了提高容灾性和提供廉价的隔离服务。选择不同的region主要考虑那个region靠近你的用户群体。
 
 2. 什么是aggregate host
@@ -36,7 +36,7 @@ Positional arguments:
 
 ```
 
-意思使创建一个host-aggregate,同时把它作为一个zone,此时aggregate=zone. 大家知道,aggregate使管理员可见,普通用户不可以见的对象,这个改变,可以使普通用户通过Zone的方式来使用Aggregate.
+意思是创建一个host-aggregate,同时把它作为一个zone,此时aggregate=zone. 大家知道,aggregate使管理员可见,普通用户不可以见的对象,这个改变,可以使普通用户通过Zone的方式来使用Aggregate.
 
 创建完aggregate之后,项aggregate中增加主机时,该主机就自动属于aggregate表示的zone.
 
@@ -67,7 +67,7 @@ Positional arguments:
 ```
 # nova aggregate-create aggregate2 az2
 # nova aggregate-add-host aggregate2 computer1
-# nova host-
+# nova host-list
 # nova service-list
 ```
 
