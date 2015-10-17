@@ -6,6 +6,12 @@ tags:
  - Devops
 ---
 
+## Nova 关键配置
+
+> scheduler_default_filter =  RetryFilter, AvailabilityZoneFilter, RamFilter, ComputeFilter, ImagePropertiesFilter, JsonFilter, EcuFilter, CoreFilter
+
+nova-scheduler 可用的过滤器, Retry 是用来跳过已经尝试创建但是失败的计算节点，防止重调度死循环；AvailabilityZone 是过滤那些用户指定的 AZ 的，防止用户的虚拟机创建到未指定的 AZ 里面；Ram 是过滤掉内存不足的计算节点；Core 是过滤掉 VCPU 数量不足的计算节点；
+
 ## 宿主资源隔离
 
 > vcpu_pin_set = 4-$
