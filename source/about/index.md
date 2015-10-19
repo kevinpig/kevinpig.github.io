@@ -1,5 +1,8 @@
 ## 刘瑞飞(kevin)
 
+### 个人简历
+  2年MFC编程经验, 5年ACE C++跨平台开发经验, 期间用过WinForm, VCL, WPF, ASP.NET, 玩过Oracle, MySQL, 略懂脚本语言,如python. 现在主要研究Openstack和Ceph企业私有云解决方案. 致力于医疗IT信息化.
+
 ### 工作简历
 
   * 2011-08 --- 至今    上海联影医疗 软件架构师 & 高级主管
