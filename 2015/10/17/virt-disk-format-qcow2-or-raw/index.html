@@ -4,38 +4,26 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>利用varant搭建跨平台开发环境 | kevin的博客</title>
+    <title>Openstack中虚拟机镜像格式的选择 | kevin的博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="kevin">
     
 
     
-    <meta name="description" content="什么是vagrantvagrant是一款构建虚拟开发环境的功能。可以使用vagrant封装一个标准的linux开发环境，然后分发给开发团队的成员。这样其他成员就可以在自己喜欢的桌面系统进行开发，而代码执行却可以在统一的环境，非常的便利。
-vagrant环境准备
-安装 virtualBox
-下载安装vagrant
-下载官方封装好的基础镜像 (比如ubuntu)
-添加镜像到vagrant $ vagr">
+    <meta name="description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些使摘抄自互联网,如有雷同,实属荣幸.
+虚拟机硬盘格式比较1. rawraw格式是最简单，什么都没有，所以叫raw格式。连头文件都没有，就是一个直接给虚拟机进行读写的文件。raw不支持动态增长空间，必须一开始就指定空间大小。所以相当的耗费磁盘空间。但是对于支持稀疏文件的文件系统（如ext4）而言，这方面并不突出。ext4下默认创建的文件就是稀疏文">
 <meta property="og:type" content="article">
-<meta property="og:title" content="利用varant搭建跨平台开发环境">
-<meta property="og:url" content="http://yoursite.com/2015/08/07/setup-cross-platform-dev-env-with-vagrant/index.html">
+<meta property="og:title" content="Openstack中虚拟机镜像格式的选择">
+<meta property="og:url" content="http://yoursite.com/2015/10/17/virt-disk-format-qcow2-or-raw/index.html">
 <meta property="og:site_name" content="kevin的博客">
-<meta property="og:description" content="什么是vagrantvagrant是一款构建虚拟开发环境的功能。可以使用vagrant封装一个标准的linux开发环境，然后分发给开发团队的成员。这样其他成员就可以在自己喜欢的桌面系统进行开发，而代码执行却可以在统一的环境，非常的便利。
-vagrant环境准备
-安装 virtualBox
-下载安装vagrant
-下载官方封装好的基础镜像 (比如ubuntu)
-添加镜像到vagrant $ vagr">
-<meta property="og:updated_time" content="2015-08-07T09:27:49.000Z">
+<meta property="og:description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些使摘抄自互联网,如有雷同,实属荣幸.
+虚拟机硬盘格式比较1. rawraw格式是最简单，什么都没有，所以叫raw格式。连头文件都没有，就是一个直接给虚拟机进行读写的文件。raw不支持动态增长空间，必须一开始就指定空间大小。所以相当的耗费磁盘空间。但是对于支持稀疏文件的文件系统（如ext4）而言，这方面并不突出。ext4下默认创建的文件就是稀疏文">
+<meta property="og:updated_time" content="2015-10-17T06:36:03.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="利用varant搭建跨平台开发环境">
-<meta name="twitter:description" content="什么是vagrantvagrant是一款构建虚拟开发环境的功能。可以使用vagrant封装一个标准的linux开发环境，然后分发给开发团队的成员。这样其他成员就可以在自己喜欢的桌面系统进行开发，而代码执行却可以在统一的环境，非常的便利。
-vagrant环境准备
-安装 virtualBox
-下载安装vagrant
-下载官方封装好的基础镜像 (比如ubuntu)
-添加镜像到vagrant $ vagr">
+<meta name="twitter:title" content="Openstack中虚拟机镜像格式的选择">
+<meta name="twitter:description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些使摘抄自互联网,如有雷同,实属荣幸.
+虚拟机硬盘格式比较1. rawraw格式是最简单，什么都没有，所以叫raw格式。连头文件都没有，就是一个直接给虚拟机进行读写的文件。raw不支持动态增长空间，必须一开始就指定空间大小。所以相当的耗费磁盘空间。但是对于支持稀疏文件的文件系统（如ext4）而言，这方面并不突出。ext4下默认创建的文件就是稀疏文">
 
     
     <link rel="alternative" href="/atom.xml" title="kevin的博客" type="application/atom+xml">
@@ -95,14 +83,14 @@ vagrant环境准备
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/08/07/setup-cross-platform-dev-env-with-vagrant/" title="利用varant搭建跨平台开发环境" itemprop="url">利用varant搭建跨平台开发环境</a>
+      <a href="/2015/10/17/virt-disk-format-qcow2-or-raw/" title="Openstack中虚拟机镜像格式的选择" itemprop="url">Openstack中虚拟机镜像格式的选择</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
 		
   <p class="article-time">
-    <time datetime="2015-08-07T09:10:15.000Z" itemprop="datePublished"> 发表于 2015-08-07</time>
+    <time datetime="2015-10-17T05:55:37.000Z" itemprop="datePublished"> 发表于 2015-10-17</time>
     
   </p>
 </header>
@@ -111,50 +99,55 @@ vagrant环境准备
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是vagrant"><span class="toc-number">1.</span> <span class="toc-text">什么是vagrant</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant环境准备"><span class="toc-number">2.</span> <span class="toc-text">vagrant环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初始化开发环境"><span class="toc-number">3.</span> <span class="toc-text">初始化开发环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant的功能"><span class="toc-number">4.</span> <span class="toc-text">vagrant的功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant_常用命令"><span class="toc-number">5.</span> <span class="toc-text">vagrant 常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">6.</span> <span class="toc-text">参考链接</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#虚拟机硬盘格式比较"><span class="toc-number">1.</span> <span class="toc-text">虚拟机硬盘格式比较</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-_raw"><span class="toc-number">1.1.</span> <span class="toc-text">1. raw</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-_qcow2"><span class="toc-number">1.2.</span> <span class="toc-text">2. qcow2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-_raw格式和qcow2格式的转化"><span class="toc-number">1.3.</span> <span class="toc-text">3. raw格式和qcow2格式的转化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-_总结"><span class="toc-number">1.4.</span> <span class="toc-text">4. 总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Openstack中的使用"><span class="toc-number">2.</span> <span class="toc-text">Openstack中的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#实际使用分析"><span class="toc-number">2.1.</span> <span class="toc-text">实际使用分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#虚拟机创建过程中镜像格式的变化"><span class="toc-number">2.2.</span> <span class="toc-text">虚拟机创建过程中镜像格式的变化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">2.3.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<h2 id="什么是vagrant">什么是vagrant</h2><p><a href="https://www.vagrantup.com" target="_blank" rel="external">vagrant</a>是一款构建虚拟开发环境的功能。可以使用vagrant封装一个标准的linux开发环境，然后分发给开发团队的成员。这样其他成员就可以在自己喜欢的桌面系统进行开发，而代码执行却可以在统一的环境，非常的便利。</p>
-<h2 id="vagrant环境准备">vagrant环境准备</h2><ol>
-<li>安装 <a href="www.virtualbox.org">virtualBox</a></li>
-<li>下载安装vagrant</li>
-<li>下载官方封装好的基础镜像 (比如ubuntu)</li>
-<li>添加镜像到vagrant <code>$ vagrant box add trusty /path/to/trusty.box</code></li>
-</ol>
-<h2 id="初始化开发环境">初始化开发环境</h2><figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="char">$ </span>cd ~/dev</span><br><span class="line"><span class="char">$ </span>vagrant init trusty</span><br><span class="line"><span class="char">$ </span>vagrant up</span><br></pre></td></tr></table></figure>
-<p>看到终端显示启动完成以后，就可以通过ssh登录到虚拟机了<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vagrant ssh </span><br><span class="line"><span class="variable">$ </span>cd /vagrant   <span class="comment"># 切换到开发目录，这里的目录对应host机器上的～/dev目录</span></span><br></pre></td></tr></table></figure></p>
-<a id="more"></a>
-<h2 id="vagrant的功能">vagrant的功能</h2><p>vagrant 初始化成功以后，会在初始化目录生产一个 <code>Vagrantfile</code>的配置文件，可以修改配置文件进行个性化定制</p>
+		<p>声明:<br>本博客欢迎转发<br>内容系本人学习, 研究和总结,有些使摘抄自互联网,如有雷同,实属荣幸.</p>
+<h2 id="虚拟机硬盘格式比较">虚拟机硬盘格式比较</h2><h3 id="1-_raw">1. raw</h3><p>raw格式是最简单，什么都没有，所以叫raw格式。连头文件都没有，就是一个直接给虚拟机进行读写的文件。raw不支持动态增长空间，必须一开始就指定空间大小。所以相当的耗费磁盘空间。但是对于支持稀疏文件的文件系统（如ext4）而言，这方面并不突出。ext4下默认创建的文件就是稀疏文件，所以不要做什么额外的工作。</p>
+<p>raw镜像格式是虚拟机种I/O性能最好的一种格式，大家在使用时都会和raw进行参照，性能越接近raw的越好。但是raw没有任何其他功能。对于稀疏文件的出现，像qcow这一类的运行时分配空间的镜像就没有任何优势了。 Raw 的优势</p>
 <ol>
-<li><p>共享host文件到VM中<br>默认情况下host会共享当前的文件夹到VM中的<code>/vargrant</code>下。 打开<code>Vagrantfile</code>,将下面这行注释去掉或者复制来增加新的共享文件<br><code>config.vm.sync_folder &quot;../data&quot;, &quot;/vagrant_data&quot;</code></p>
+<li>简单,并能够到处为其他虚拟机虚拟硬盘格式</li>
+<li>根据实际使用量来占用空间,而非设定的最大值(需要宿主支持hole)</li>
+<li>能够被宿主机挂载, 不用开虚拟机即可在宿主和虚拟机间进行数据传输</li>
+</ol>
+<a id="more"></a>
+<h3 id="2-_qcow2">2. qcow2</h3><p>现在比较主流的一种虚拟化镜像格式，经过一代的优化，目前qcow2的性能上接近raw裸格式的性能.  与普通的raw格式的镜像相比,有以下的特性:</p>
+<ol>
+<li>更小的空间占用，即使文件系统不支持空洞(holes)；</li>
+<li>支持写时拷贝（COW, copy-on-write），镜像文件只反映底层磁盘的变化；</li>
+<li>支持快照（snapshot），镜像文件能够包含多个快照的历史；</li>
+<li>可选择基于 zlib 的压缩方式</li>
+<li>可以选择 AES 加密</li>
+</ol>
+<h3 id="3-_raw格式和qcow2格式的转化">3. raw格式和qcow2格式的转化</h3><ol>
+<li><p>raw –&gt; qcow2</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="tag">qemu-img</span> <span class="tag">convert</span> <span class="tag">-f</span> <span class="tag">raw</span> <span class="tag">-O</span> <span class="tag">qcow2</span> <span class="tag">centos</span><span class="class">.raw</span> <span class="tag">centos</span><span class="class">.qcow2</span></span><br></pre></td></tr></table></figure>
 </li>
-<li><p>端口映射<br>vagrant默认使用端口映射方式将VM的端口映射到本地，从而实现类是<code>http://localhost:80</code>这种访问方式，更方便的方法是增加host-only网卡模式。打开<code>Vagrantfile</code>将下面这行注释去掉或者修改<br><code>config.vm.network :private_network, ip: &quot;192.168.33.10&quot;</code><br>重启虚拟机就是可以使用上面的IP地址进行访问VM了</p>
-</li>
-<li><p>privisioning – 自动配置VM当使用<code>vagrant up</code><br>可以通过shell脚本，或者puppet，chef，saltstack等配置管理工具，对vagrant开发环境进行自动配置。也可以使用<code>vagrant reload --provision</code>对已经运行过的VM进行快速的provision(将省略init中的import步骤)<br>使用shell脚本安装Apache。在Vagrant目录下创建booststrap.sh</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/usr/bin/env bash</span><br><span class="line"></span></span><br><span class="line">apt-get update</span><br><span class="line">apt-get install -y apache2</span><br><span class="line"><span class="keyword">if</span> ! [ -L /var/www ]; <span class="keyword">then</span></span><br><span class="line">   rm -rf /var/www</span><br><span class="line">   ln -fs /vargant /var/www</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<li><p>qcow2 –&gt; raw</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># <span class="tag">qemu-img</span> <span class="tag">convert</span> <span class="tag">-f</span> <span class="tag">qcow2</span> <span class="tag">-O</span> <span class="tag">raw</span> <span class="tag">centos</span><span class="class">.qcow2</span> <span class="tag">centos</span><span class="class">.raw</span></span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<p>配置vagrant当setup开发机器的时候运行bootstrap脚本。修改<code>Vagrantfile</code><br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">config<span class="class">.vm</span><span class="class">.provision</span> :shell, path: <span class="string">"bootstrap.sh"</span></span><br></pre></td></tr></table></figure></p>
-<p>puppet, chef privision方法请参考<code>Vagrantfile</code></p>
-<h2 id="vagrant_常用命令">vagrant 常用命令</h2><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vagrant init              <span class="comment"># inint VM</span></span><br><span class="line"><span class="variable">$ </span>vagrant up                <span class="comment"># start VM</span></span><br><span class="line"><span class="variable">$ </span>vagrant halt              <span class="comment"># stop VM</span></span><br><span class="line"><span class="variable">$ </span>vagrant reload            <span class="comment"># restart VM</span></span><br><span class="line"><span class="variable">$ </span>vagrant ssh               <span class="comment"># ssh login to VM</span></span><br><span class="line"><span class="variable">$ </span>vagrant status            <span class="comment"># view the VM status</span></span><br><span class="line"><span class="variable">$ </span>vagrant destroy           <span class="comment"># destroy the VM</span></span><br></pre></td></tr></table></figure>
-<h2 id="参考链接">参考链接</h2><ol>
-<li><a href="http://segmentfault.com/a/1190000000264347" target="_blank" rel="external">http://segmentfault.com/a/1190000000264347</a></li>
+<h3 id="4-_总结">4. 总结</h3><p>通过以上分析,我们很难分别出到底那种格式更好.</p>
+<h2 id="Openstack中的使用">Openstack中的使用</h2><h3 id="实际使用分析">实际使用分析</h3><ol>
+<li><p>我们使用的Openstack环境后端配置Ceph作为统一的共享存储, Glance和Cinder都使用Ceph的RBD后端, 这个时候从image转化为volume的时候,如果使用raw格式,支持copy-on-write的克隆, volume的创建速度为秒级. 而如果镜像格式使用raw格式,需要先下载到local,然后转化为raw格式,在上传的cinder后端中,时间上慢了许多.</p>
+</li>
+<li><p>使用raw格式的镜像创建虚机的时候比qcow2格式的镜像也快了许多.</p>
+</li>
+<li><p>快照. 在Openstack对虚机进行快照是全量快照.创建后的快照格式也是raw格式的. 对云硬盘的快照使用的rbd的copy on write.</p>
+</li>
 </ol>
+<h3 id="虚拟机创建过程中镜像格式的变化">虚拟机创建过程中镜像格式的变化</h3><p>参照 <a href="http://www.openstack.cn/?p=358" target="_blank" rel="external">OpenStack虚拟机创建过程中镜像格式的的变化过程</a></p>
+<h3 id="总结">总结</h3><p>综上可以看出使用raw格式的镜像格式比qcow格式的在虚机创建, cinder convert image to volume方面要快许多,同时因为Ceph统一存储rbd clone特性,虚机使用的存储空间也会小许多.有理由相信raw格式使更好的选择.</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/dev/">dev</a>
-</div>
-
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/vagrant/">vagrant</a>
+  <span></span> <a href="/tags/Openstack/">Openstack</a><a href="/tags/虚拟化/">虚拟化</a>
   </div>
 
 </div>
@@ -163,7 +156,7 @@ vagrant环境准备
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/08/07/setup-cross-platform-dev-env-with-vagrant/" data-title="利用varant搭建跨平台开发环境 | kevin的博客" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/10/17/virt-disk-format-qcow2-or-raw/" data-title="Openstack中虚拟机镜像格式的选择 | kevin的博客" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -176,19 +169,11 @@ vagrant环境准备
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/08/12/NetEasy-Openstack-Devops/" title="(转载)基于网易的openstack部署运维实战">
-  <strong>上一篇：</strong><br/>
-  <span>
-  (转载)基于网易的openstack部署运维实战</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/08/07/2015-08-07-how-to-create-openstack-windows-image/"  title="如何创建openstack windows 虚拟机镜像">
+<a href="/2015/09/30/openstack-qos/"  title="openstack中的Qos功能">
  <strong>下一篇：</strong><br/> 
- <span>如何创建openstack windows 虚拟机镜像
+ <span>openstack中的Qos功能
 </span>
 </a>
 </div>
@@ -197,7 +182,7 @@ vagrant环境准备
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/08/07/setup-cross-platform-dev-env-with-vagrant/" data-title="利用varant搭建跨平台开发环境" data-url="http://yoursite.com/2015/08/07/setup-cross-platform-dev-env-with-vagrant/"></div>
+	<div class="ds-thread" data-thread-key="2015/10/17/virt-disk-format-qcow2-or-raw/" data-title="Openstack中虚拟机镜像格式的选择" data-url="http://yoursite.com/2015/10/17/virt-disk-format-qcow2-or-raw/"></div>
 </section>
 
 
@@ -207,7 +192,7 @@ vagrant环境准备
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是vagrant"><span class="toc-number">1.</span> <span class="toc-text">什么是vagrant</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant环境准备"><span class="toc-number">2.</span> <span class="toc-text">vagrant环境准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初始化开发环境"><span class="toc-number">3.</span> <span class="toc-text">初始化开发环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant的功能"><span class="toc-number">4.</span> <span class="toc-text">vagrant的功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant_常用命令"><span class="toc-number">5.</span> <span class="toc-text">vagrant 常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-number">6.</span> <span class="toc-text">参考链接</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#虚拟机硬盘格式比较"><span class="toc-number">1.</span> <span class="toc-text">虚拟机硬盘格式比较</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-_raw"><span class="toc-number">1.1.</span> <span class="toc-text">1. raw</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-_qcow2"><span class="toc-number">1.2.</span> <span class="toc-text">2. qcow2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-_raw格式和qcow2格式的转化"><span class="toc-number">1.3.</span> <span class="toc-text">3. raw格式和qcow2格式的转化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-_总结"><span class="toc-number">1.4.</span> <span class="toc-text">4. 总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Openstack中的使用"><span class="toc-number">2.</span> <span class="toc-text">Openstack中的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#实际使用分析"><span class="toc-number">2.1.</span> <span class="toc-text">实际使用分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#虚拟机创建过程中镜像格式的变化"><span class="toc-number">2.2.</span> <span class="toc-text">虚拟机创建过程中镜像格式的变化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">2.3.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
  
   </div>
 
