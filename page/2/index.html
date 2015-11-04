@@ -14,7 +14,7 @@
     <meta name="description">
 <meta property="og:type" content="website">
 <meta property="og:title" content="kevin的博客">
-<meta property="og:url" content="http://yoursite.com/page/2/index.html">
+<meta property="og:url" content="https://kevinpig.github.io/page/2/index.html">
 <meta property="og:site_name" content="kevin的博客">
 <meta property="og:description">
 <meta name="twitter:card" content="summary">
@@ -64,7 +64,7 @@
 					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
 						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
-						<input type="hidden" name="q" value="site:yoursite.com">
+						<input type="hidden" name="q" value="site:kevinpig.github.io">
 					</form>
 					
 					</li>
@@ -74,6 +74,84 @@
     </header>
     <div id="container">
       <div id="main">
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/08/13/xiaomi-openstack-case/" title="(转载)详解OpenStack在小米私有云平台的实践" itemprop="url">(转载)详解OpenStack在小米私有云平台的实践</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-13T02:23:05.000Z" itemprop="datePublished"> 发表于 2015-08-13</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="编者按：">编者按：</h2><p>除了金山的公有云采用OpenStack构建外，小米的私有云平台同样采用OpenStack建设。目前的小米集群分布在多个IDC、数千台虚拟机，服务公司几十个产品线的线上和线下业务，这篇实践就是由为小米OpenStack项目负责人潘晓东带来的干货分享。</p>
+<h2 id="正文：">正文：</h2><p>小米目前内部建设的是高可用的私有云平台，为全公司提供统一的云服务平台。提供弹性的资源分配和部署方式，同时提高资源的分配和管理效率。减少服务资源的交付周期。为此小米定了四大目标：</p>
+<ul>
+<li>稳定第一：支撑公司多条产品线业务，力求稳定</li>
+<li>性能优化：尽快可能的降低虚拟机的资源消耗，保证虚拟机的性能</li>
+<li>内网互通：虚拟机需要和公司其他主机互联互通。对其他主机透明</li>
+<li>业务定制：OpenStack需要和公司其他系统互通（监控和主机信息）</li>
+</ul>
+<h2 id="小米OpenStack项目概况">小米OpenStack项目概况</h2><p>小米基于这四点做了私有云平台，有着数千台VM的OpenStack集群，稳定服务公司线上线下业务一年多时间，数据说明如下：</p>
+<p> *可用度达到99.99%。运行16个月，2次故障，分别是GlusterFS和OpenvSwitch引发的问题：1.GlusterFS的bug有可能导致文件系统被置为Readonly，据说bug目前已经修复；2.在广播风暴的情况下，OpenvSwith由于起软件性能的问题，最有可能被打死，这个问题是所有的软网桥（包括VMware）都存在的问题；</p>
+<ul>
+<li>目前使用率：平均40%（物理机利用率），1虚12；</li>
+<li>覆盖度：小米所有产品线；</li>
+<li>业务类型：开发，测试，线上（线下70%）。</li>
+</ul>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/08/13/xiaomi-openstack-case/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/转载/">转载</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Openstack/">Openstack</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/13/xiaomi-openstack-case/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/13/xiaomi-openstack-case/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
 
    
     
@@ -405,10 +483,6 @@
 			
 		
 			
-				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/image/" title="image">image<sup>1</sup></a></li>
 			
 		
@@ -421,7 +495,15 @@
 			
 		
 			
-				<li><a href="/tags/Qos/" title="Qos">Qos<sup>1</sup></a></li>
+				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/系统管理/" title="系统管理">系统管理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/emacs/" title="emacs">emacs<sup>1</sup></a></li>
 			
 		
 			
@@ -429,7 +511,9 @@
 			
 		
 			
-				<li><a href="/tags/emacs/" title="emacs">emacs<sup>1</sup></a></li>
+				<li><a href="/tags/Qos/" title="Qos">Qos<sup>1</sup></a></li>
+			
+		
 			
 		
 		</ul>

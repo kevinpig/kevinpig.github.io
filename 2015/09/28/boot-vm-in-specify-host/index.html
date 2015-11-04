@@ -16,7 +16,7 @@
 实现原理当你发">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Openstack 决定虚机的宿主机">
-<meta property="og:url" content="http://yoursite.com/2015/09/28/boot-vm-in-specify-host/index.html">
+<meta property="og:url" content="https://kevinpig.github.io/2015/09/28/boot-vm-in-specify-host/index.html">
 <meta property="og:site_name" content="kevin的博客">
 <meta property="og:description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些是摘抄自互联网,如有雷同,实属荣幸.
 需求通常在一个云计算中心中,提供虚拟资源池计算能力的物理主机一般有成百上千个,因为业务的需求,我们需要将这些物理主机进行分组,以区分其本身的性质或者提供不同的服务. 我们研究的使Openstack,因此这里就讨论Openstack中Nova如果通过配置将虚拟机创建到指定的Host或者分组中.
@@ -72,7 +72,7 @@
 					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
 						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
-						<input type="hidden" name="q" value="site:yoursite.com">
+						<input type="hidden" name="q" value="site:kevinpig.github.io">
 					</form>
 					
 					</li>
@@ -115,7 +115,7 @@
 <p>Nova中已经实现了多种的过滤策略,开发者也可以根据自己的需求来实现自己的过滤策略.</p>
 <p>在/etc/nova/nova.conf中的scheduler_default_filter配置了起作用的filter</p>
 <a id="more"></a>
-<h2 id="实际使用">实际使用</h2><p>在上一篇博客中<a href="http://kevinpig.github.io/2015/09/28/openstack-availability-zone/" target="_blank" rel="external">openstack中的可用域的配置</a> 我们阐述了如何创建available_zone,通过az我们可以使我们创建的虚机运行在指定的az上</p>
+<h2 id="实际使用">实际使用</h2><p>在上一篇博客中<a href="http://kevinpig.github.io/2015/09/28/openstack-availability-zone/">openstack中的可用域的配置</a> 我们阐述了如何创建available_zone,通过az我们可以使我们创建的虚机运行在指定的az上</p>
 <figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span> <span class="comment">nova</span> <span class="comment">boot</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">image</span> <span class="comment">1</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">flavor</span> <span class="comment">2</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">availability</span><span class="literal">-</span><span class="comment">zone</span> <span class="comment">nova</span> <span class="comment">myServer</span></span><br></pre></td></tr></table></figure>
 <p>查看日志我们可以发现AvailabilityZoneFilter过滤出了az为nova的host</p>
 <h2 id="更近一步">更近一步</h2><p>当我们创建虚机的时候,如何单纯的通过指定flavor来确定虚机被创建的az呢? 我们可以使用AggregateInstanceExtraSpecsFilter来进行过滤,阅读源码我们可以得知,filter中的filter_properties 的组成大致如下<br><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">instance_type</span>: <span class="string">调用get_flavor_by_flavor_id和传入的flavor相关</span></span><br><span class="line"><span class="attribute">availablity_zone</span>: <span class="string">nova boot时传入的参数</span></span><br></pre></td></tr></table></figure></p>
@@ -145,7 +145,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/09/28/boot-vm-in-specify-host/" data-title="Openstack 决定虚机的宿主机 | kevin的博客" data-tsina="null" class="share clearfix">
+	  <div data-url="https://kevinpig.github.io/2015/09/28/boot-vm-in-specify-host/" data-title="Openstack 决定虚机的宿主机 | kevin的博客" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -179,7 +179,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/09/28/boot-vm-in-specify-host/" data-title="Openstack 决定虚机的宿主机" data-url="http://yoursite.com/2015/09/28/boot-vm-in-specify-host/"></div>
+	<div class="ds-thread" data-thread-key="2015/09/28/boot-vm-in-specify-host/" data-title="Openstack 决定虚机的宿主机" data-url="https://kevinpig.github.io/2015/09/28/boot-vm-in-specify-host/"></div>
 </section>
 
 
@@ -229,10 +229,6 @@
 			
 		
 			
-				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/image/" title="image">image<sup>1</sup></a></li>
 			
 		
@@ -245,7 +241,15 @@
 			
 		
 			
-				<li><a href="/tags/Qos/" title="Qos">Qos<sup>1</sup></a></li>
+				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/系统管理/" title="系统管理">系统管理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/emacs/" title="emacs">emacs<sup>1</sup></a></li>
 			
 		
 			
@@ -253,7 +257,9 @@
 			
 		
 			
-				<li><a href="/tags/emacs/" title="emacs">emacs<sup>1</sup></a></li>
+				<li><a href="/tags/Qos/" title="Qos">Qos<sup>1</sup></a></li>
+			
+		
 			
 		
 		</ul>

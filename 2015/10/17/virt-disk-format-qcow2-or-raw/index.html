@@ -15,11 +15,11 @@
 虚拟机硬盘格式比较1. rawraw格式是最简单，什么都没有，所以叫raw格式。连头文件都没有，就是一个直接给虚拟机进行读写的文件。raw不支持动态增长空间，必须一开始就指定空间大小。所以相当的耗费磁盘空间。但是对于支持稀疏文件的文件系统（如ext4）而言，这方面并不突出。ext4下默认创建的文件就是稀疏文">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Openstack中虚拟机镜像格式的选择">
-<meta property="og:url" content="http://yoursite.com/2015/10/17/virt-disk-format-qcow2-or-raw/index.html">
+<meta property="og:url" content="https://kevinpig.github.io/2015/10/17/virt-disk-format-qcow2-or-raw/index.html">
 <meta property="og:site_name" content="kevin的博客">
 <meta property="og:description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些使摘抄自互联网,如有雷同,实属荣幸.
 虚拟机硬盘格式比较1. rawraw格式是最简单，什么都没有，所以叫raw格式。连头文件都没有，就是一个直接给虚拟机进行读写的文件。raw不支持动态增长空间，必须一开始就指定空间大小。所以相当的耗费磁盘空间。但是对于支持稀疏文件的文件系统（如ext4）而言，这方面并不突出。ext4下默认创建的文件就是稀疏文">
-<meta property="og:updated_time" content="2015-10-17T06:36:03.000Z">
+<meta property="og:updated_time" content="2015-10-17T06:48:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Openstack中虚拟机镜像格式的选择">
 <meta name="twitter:description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些使摘抄自互联网,如有雷同,实属荣幸.
@@ -68,7 +68,7 @@
 					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
 						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
-						<input type="hidden" name="q" value="site:yoursite.com">
+						<input type="hidden" name="q" value="site:kevinpig.github.io">
 					</form>
 					
 					</li>
@@ -130,15 +130,15 @@
 </ol>
 <h3 id="4-_总结">4. 总结</h3><p>通过以上分析,我们很难分别出到底那种格式更好.</p>
 <h2 id="Openstack中的使用">Openstack中的使用</h2><h3 id="实际使用分析">实际使用分析</h3><ol>
-<li><p>我们使用的Openstack环境后端配置Ceph作为统一的共享存储, Glance和Cinder都使用Ceph的RBD后端, 这个时候从image转化为volume的时候,如果使用raw格式,支持copy-on-write的克隆, volume的创建速度为秒级. 而如果镜像格式使用raw格式,需要先下载到local,然后转化为raw格式,在上传的cinder后端中,时间上慢了许多.</p>
+<li><p>我们使用的Openstack环境后端配置Ceph作为统一的共享存储, Glance和Cinder都使用Ceph的RBD后端, 这个时候从image转化为volume的时候,如果使用raw格式,支持copy-on-write的克隆, volume的创建速度为秒级. 而如果镜像格式使用qcow2格式,需要先下载到local,然后转化为raw格式,在上传的cinder后端中,时间上慢了许多.</p>
 </li>
 <li><p>使用raw格式的镜像创建虚机的时候比qcow2格式的镜像也快了许多.</p>
 </li>
 <li><p>快照. 在Openstack对虚机进行快照是全量快照.创建后的快照格式也是raw格式的. 对云硬盘的快照使用的rbd的copy on write.</p>
 </li>
 </ol>
-<h3 id="虚拟机创建过程中镜像格式的变化">虚拟机创建过程中镜像格式的变化</h3><p>参照 <a href="http://www.openstack.cn/?p=358" target="_blank" rel="external">OpenStack虚拟机创建过程中镜像格式的的变化过程</a></p>
-<h3 id="总结">总结</h3><p>综上可以看出使用raw格式的镜像格式比qcow格式的在虚机创建, cinder convert image to volume方面要快许多,同时因为Ceph统一存储rbd clone特性,虚机使用的存储空间也会小许多.有理由相信raw格式使更好的选择.</p>
+<h3 id="虚拟机创建过程中镜像格式的变化">虚拟机创建过程中镜像格式的变化</h3><p>内容参考 <a href="http://www.openstack.cn/?p=358" target="_blank" rel="external">OpenStack虚拟机创建过程中镜像格式的的变化过程</a></p>
+<h3 id="总结">总结</h3><p>综上可以看出使用raw格式的镜像格式比qcow格式的在虚机创建, cinder convert image to volume方面要快许多,同时因为Ceph统一存储rbd clone特性,在创建虚机的过程中,虚机使用的存储空间也会小许多.有理由相信raw格式使更好的选择.</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -156,7 +156,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/10/17/virt-disk-format-qcow2-or-raw/" data-title="Openstack中虚拟机镜像格式的选择 | kevin的博客" data-tsina="null" class="share clearfix">
+	  <div data-url="https://kevinpig.github.io/2015/10/17/virt-disk-format-qcow2-or-raw/" data-title="Openstack中虚拟机镜像格式的选择 | kevin的博客" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -169,6 +169,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2015/11/04/linux-monitor/" title="linux系统工具总结">
+  <strong>上一篇：</strong><br/>
+  <span>
+  linux系统工具总结</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2015/09/30/openstack-qos/"  title="openstack中的Qos功能">
@@ -182,7 +190,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/10/17/virt-disk-format-qcow2-or-raw/" data-title="Openstack中虚拟机镜像格式的选择" data-url="http://yoursite.com/2015/10/17/virt-disk-format-qcow2-or-raw/"></div>
+	<div class="ds-thread" data-thread-key="2015/10/17/virt-disk-format-qcow2-or-raw/" data-title="Openstack中虚拟机镜像格式的选择" data-url="https://kevinpig.github.io/2015/10/17/virt-disk-format-qcow2-or-raw/"></div>
 </section>
 
 
@@ -239,10 +247,6 @@
 			
 		
 			
-				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/image/" title="image">image<sup>1</sup></a></li>
 			
 		
@@ -255,7 +259,15 @@
 			
 		
 			
-				<li><a href="/tags/Qos/" title="Qos">Qos<sup>1</sup></a></li>
+				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/系统管理/" title="系统管理">系统管理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/emacs/" title="emacs">emacs<sup>1</sup></a></li>
 			
 		
 			
@@ -263,7 +275,9 @@
 			
 		
 			
-				<li><a href="/tags/emacs/" title="emacs">emacs<sup>1</sup></a></li>
+				<li><a href="/tags/Qos/" title="Qos">Qos<sup>1</sup></a></li>
+			
+		
 			
 		
 		</ul>
