@@ -45,6 +45,23 @@ iftop使按照目的IP地址和端口为视图来显示网络流量,如果想知
 # nethogs eth0
 ```
 
+### netstat
+用于显示各种网络相关信息,如网络连接, 路由表,接口状态. 从总体上看netstat输出分为两部分, 一为有源TCP连接,另一个为有源Unix域套接口.常用参数
+1. -a (all)显示所有选项,默认不显示LISTEN相关
+2. -t(tcp) 仅显示tcp相关选项
+3. -l 仅列出又在Listen的服务状态
+4. -p 显示建立相关链接的程序名
+5. -u(udp) 仅显示udp相关选项
+
+实例
+```
+# netstat -lt  #仅列出所有TCP监听端口
+# netstat -pt  #在netstat输出中显示PID和进程名称
+# netstat -anp | grep 80 # 查找端口xxx的进程名称
+# netstat -lnp | grep 80 # 查找监听端口xxx的进程名称
+# netstat -ap | grep ssh # 找出程序运行的端口
+```
+
 ## 进程查看 & CPU & Mem
 
 ### htop

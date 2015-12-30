@@ -9,8 +9,8 @@ tags:
  - image
 categories:
  - 云计算
- 
-description: 
+
+description:
 ---
 
 
@@ -21,16 +21,16 @@ description:
 　　2. 下载virtio-win的驱动文件
 　　3. 下载cloud-init的安装程序
 
-## 1. 创建镜像磁盘
+## 创建镜像磁盘
 
 创建一个windows镜像磁盘，raw格式，大小为15G
-``` 
-$ qemu-img create -f qcow2 winServer2008.img 15G 
+```
+$ qemu-img create -f qcow2 winServer2008.img 15G
 ```
 
 <!--more-->
 
-## 2. 创建虚拟机
+## 创建虚拟机
 
 ```
  $ virt-install --connect qemu:///system -n winServer2008 -r 2048 \
@@ -45,7 +45,7 @@ $ qemu-img create -f qcow2 winServer2008.img 15G
 　　![](http://static.oschina.net/uploads/space/2012/1212/203412_D0MJ_123777.jpg)
 　　
 　　
-## 3. 安装cloud-init
+## 安装cloud-init
 
 ![](http://www.cloudbase.it/wp-content/uploads/2015/07/cloudbase-init-01.png)
 
@@ -58,18 +58,37 @@ $ qemu-img create -f qcow2 winServer2008.img 15G
 
 安装完成Cloud-Init请执行Sysprep来生成一个通用的Image，这样我们就可以从该image复制多个新的实例。
 
-## 4. 其他工作
+## 其他工作
 
  1. 在设备管理器中确认磁盘驱动器和网络驱动器使用的为redhat virto
  2. 为上传的镜像打开远程连接 (optional)
  3. 上传镜像完成后，设置安全策略，为远程连接开放3389端口
  ![](http://static.oschina.net/uploads/space/2012/1212/204846_9VEc_123777.jpg)
- 
-## 5. 上传虚拟机
+
+## 上传虚拟机
 
 　　通过Horizon的UI我们可以上传我们的镜像文件到Openstack中，接下来解释测试该镜像是否可以正确的启动虚拟机。
 　　
 作者：[kevinpig](ruifei.liu@united-imaging.com)
+
+## 创建ubuntu的虚拟机镜像
+
+```
+$ qemu-img create -f raw ubuntu-14.04-log-template.raw 15G
+$ virt-install --virt-type kvm --name ubuntu-1404-log --ram 2048 \
+  --disk path=/home/lrf/imageCreate/ubuntu-14.04-log-template.raw,size=15,format=raw \
+  --cdrom=/home/lrf/cloud/ubuntu-14.04.1-server-amd64.iso \
+  --graphic vnc,listen=0.0.0.0 --noautoconsole \
+  --os-type linux --os-variant=ubuntutrusty \
+  --network network=default
+$ virt-manager
+# install cloud-init
+$ apt-get install cloud-init
+$ dpkg-reconfigure cloud-init
+
+$ virt-sysprep -d ubuntu-1404-log
+```
+
 
 # 参考链接
 1. [http://my.oschina.net/guol/blog/95449](http://my.oschina.net/guol/blog/95449)
