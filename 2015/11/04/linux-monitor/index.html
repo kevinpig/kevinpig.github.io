@@ -30,7 +30,7 @@ TX：发送流量RX：接收流量TOTAL：总流量Cumm：运行iftop到目前�
 <meta property="og:image" content="https://kevinpig.github.io/images/linux_monitor/iftop-interface.jpg">
 <meta property="og:image" content="https://kevinpig.github.io/images/linux_monitor/ncdu-g.jpg">
 <meta property="og:image" content="https://kevinpig.github.io/images/linux_monitor/ncdu-i.jpg">
-<meta property="og:updated_time" content="2015-11-04T07:07:13.000Z">
+<meta property="og:updated_time" content="2015-11-13T02:49:41.660Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux系统工具总结">
 <meta name="twitter:description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些使摘抄自互联网,如有雷同,实属荣幸.
@@ -114,7 +114,7 @@ TX：发送流量RX：接收流量TOTAL：总流量Cumm：运行iftop到目前�
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#网络流量监控"><span class="toc-number">1.</span> <span class="toc-text">网络流量监控</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#iftop"><span class="toc-number">1.1.</span> <span class="toc-text">iftop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nethogs"><span class="toc-number">1.2.</span> <span class="toc-text">nethogs</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程查看_&_CPU_&_Mem"><span class="toc-number">2.</span> <span class="toc-text">进程查看 & CPU & Mem</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#htop"><span class="toc-number">2.1.</span> <span class="toc-text">htop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#atop"><span class="toc-number">2.2.</span> <span class="toc-text">atop</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#硬盘相关"><span class="toc-number">3.</span> <span class="toc-text">硬盘相关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ncdu_(磁盘目录占用空间计算排序工具)"><span class="toc-number">4.</span> <span class="toc-text">ncdu (磁盘目录占用空间计算排序工具)</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#网络流量监控"><span class="toc-number">1.</span> <span class="toc-text">网络流量监控</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#iftop"><span class="toc-number">1.1.</span> <span class="toc-text">iftop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nethogs"><span class="toc-number">1.2.</span> <span class="toc-text">nethogs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#netstat"><span class="toc-number">1.3.</span> <span class="toc-text">netstat</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程查看_&_CPU_&_Mem"><span class="toc-number">2.</span> <span class="toc-text">进程查看 & CPU & Mem</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#htop"><span class="toc-number">2.1.</span> <span class="toc-text">htop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#atop"><span class="toc-number">2.2.</span> <span class="toc-text">atop</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#硬盘相关"><span class="toc-number">3.</span> <span class="toc-text">硬盘相关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ncdu_(磁盘目录占用空间计算排序工具)"><span class="toc-number">3.1.</span> <span class="toc-text">ncdu (磁盘目录占用空间计算排序工具)</span></a></li></ol></li></ol>
 		
 		</div>
 		
@@ -129,9 +129,18 @@ TX：发送流量RX：接收流量TOTAL：总流量Cumm：运行iftop到目前�
 <figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">高级功能: iftop 通过-f支持pcap-<span class="built_in">filter</span> formatted <span class="built_in">filter</span>的过滤条件设置.</span><br></pre></td></tr></table></figure>
 <h3 id="nethogs">nethogs</h3><p>iftop使按照目的IP地址和端口为视图来显示网络流量,如果想知道那个进程占用了大量的网络流量,就需要以进程为视图来显示网络流量.</p>
 <figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># nethogs eth0</span></span><br></pre></td></tr></table></figure>
+<h3 id="netstat">netstat</h3><p>用于显示各种网络相关信息,如网络连接, 路由表,接口状态. 从总体上看netstat输出分为两部分, 一为有源TCP连接,另一个为有源Unix域套接口.常用参数</p>
+<ol>
+<li>-a (all)显示所有选项,默认不显示LISTEN相关</li>
+<li>-t(tcp) 仅显示tcp相关选项</li>
+<li>-l 仅列出又在Listen的服务状态</li>
+<li>-p 显示建立相关链接的程序名</li>
+<li>-u(udp) 仅显示udp相关选项</li>
+</ol>
+<p>实例<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># netstat -lt  #仅列出所有TCP监听端口</span></span><br><span class="line"><span class="preprocessor"># netstat -pt  #在netstat输出中显示PID和进程名称</span></span><br><span class="line"><span class="preprocessor"># netstat -anp | grep 80 # 查找端口xxx的进程名称</span></span><br><span class="line"><span class="preprocessor"># netstat -lnp | grep 80 # 查找监听端口xxx的进程名称</span></span><br><span class="line"><span class="preprocessor"># netstat -ap | grep ssh # 找出程序运行的端口</span></span><br></pre></td></tr></table></figure></p>
 <h2 id="进程查看_&amp;_CPU_&amp;_Mem">进程查看 &amp; CPU &amp; Mem</h2><h3 id="htop">htop</h3><p>htop——一个可以让用户与之交互的进程查看器。作为文本模式的应用程序，主要用于控制台或 X 终端中。当前具有按树状方式来查看进程，支持颜色主题，可以定制等特性。</p>
 <h3 id="atop">atop</h3><p>Atop 是一个类似 top 的工具，但比 top 更有料。通过 Atop，你能够监视 Linux 系统的性能状况，包括进程活动、CPU、内存、硬盘、网络等方面的使用情况等。</p>
-<h2 id="硬盘相关">硬盘相关</h2><h2 id="ncdu_(磁盘目录占用空间计算排序工具)">ncdu (磁盘目录占用空间计算排序工具)</h2><p>ncdu命令是对传统du命令功能上的增强，不需要像du那样输入大量的命令，就可以计算文件及目录大小并可以按照大小或文件名进行排序</p>
+<h2 id="硬盘相关">硬盘相关</h2><h3 id="ncdu_(磁盘目录占用空间计算排序工具)">ncdu (磁盘目录占用空间计算排序工具)</h3><p>ncdu命令是对传统du命令功能上的增强，不需要像du那样输入大量的命令，就可以计算文件及目录大小并可以按照大小或文件名进行排序</p>
 <p><strong>常用快捷键</strong></p>
 <p>n ：按文件名进行排序<br>s ：按文件大小进行排序<br>r ：重新统计当前文件夹大小<br>g ：用#或百分比显示各文件/目录的大小所占的百分比，例如：</p>
 <p><img src="/images/linux_monitor/ncdu-g.jpg" alt=""></p>
@@ -167,6 +176,14 @@ TX：发送流量RX：接收流量TOTAL：总流量Cumm：运行iftop到目前�
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2015/11/17/linux-filesystem-related/" title="linux磁盘管理相关(施工中)">
+  <strong>上一篇：</strong><br/>
+  <span>
+  linux磁盘管理相关(施工中)</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2015/10/17/virt-disk-format-qcow2-or-raw/"  title="Openstack中虚拟机镜像格式的选择">
@@ -190,7 +207,7 @@ TX：发送流量RX：接收流量TOTAL：总流量Cumm：运行iftop到目前�
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#网络流量监控"><span class="toc-number">1.</span> <span class="toc-text">网络流量监控</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#iftop"><span class="toc-number">1.1.</span> <span class="toc-text">iftop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nethogs"><span class="toc-number">1.2.</span> <span class="toc-text">nethogs</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程查看_&_CPU_&_Mem"><span class="toc-number">2.</span> <span class="toc-text">进程查看 & CPU & Mem</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#htop"><span class="toc-number">2.1.</span> <span class="toc-text">htop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#atop"><span class="toc-number">2.2.</span> <span class="toc-text">atop</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#硬盘相关"><span class="toc-number">3.</span> <span class="toc-text">硬盘相关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ncdu_(磁盘目录占用空间计算排序工具)"><span class="toc-number">4.</span> <span class="toc-text">ncdu (磁盘目录占用空间计算排序工具)</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#网络流量监控"><span class="toc-number">1.</span> <span class="toc-text">网络流量监控</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#iftop"><span class="toc-number">1.1.</span> <span class="toc-text">iftop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nethogs"><span class="toc-number">1.2.</span> <span class="toc-text">nethogs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#netstat"><span class="toc-number">1.3.</span> <span class="toc-text">netstat</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程查看_&_CPU_&_Mem"><span class="toc-number">2.</span> <span class="toc-text">进程查看 & CPU & Mem</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#htop"><span class="toc-number">2.1.</span> <span class="toc-text">htop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#atop"><span class="toc-number">2.2.</span> <span class="toc-text">atop</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#硬盘相关"><span class="toc-number">3.</span> <span class="toc-text">硬盘相关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ncdu_(磁盘目录占用空间计算排序工具)"><span class="toc-number">3.1.</span> <span class="toc-text">ncdu (磁盘目录占用空间计算排序工具)</span></a></li></ol></li></ol>
  
   </div>
 
@@ -237,7 +254,19 @@ TX：发送流量RX：接收流量TOTAL：总流量Cumm：运行iftop到目前�
 			
 		
 			
-				<li><a href="/tags/image/" title="image">image<sup>1</sup></a></li>
+				<li><a href="/tags/vagrant/" title="vagrant">vagrant<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/云计算/" title="云计算">云计算<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Qos/" title="Qos">Qos<sup>1</sup></a></li>
 			
 		
 			
@@ -245,19 +274,7 @@ TX：发送流量RX：接收流量TOTAL：总流量Cumm：运行iftop到目前�
 			
 		
 			
-				<li><a href="/tags/vagrant/" title="vagrant">vagrant<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/系统管理/" title="系统管理">系统管理<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/emacs/" title="emacs">emacs<sup>1</sup></a></li>
 			
 		
 			
@@ -265,9 +282,15 @@ TX：发送流量RX：接收流量TOTAL：总流量Cumm：运行iftop到目前�
 			
 		
 			
-				<li><a href="/tags/Qos/" title="Qos">Qos<sup>1</sup></a></li>
+				<li><a href="/tags/emacs/" title="emacs">emacs<sup>1</sup></a></li>
 			
 		
+			
+				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/image/" title="image">image<sup>1</sup></a></li>
 			
 		
 		</ul>

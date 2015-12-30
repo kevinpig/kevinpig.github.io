@@ -1,0 +1,519 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>linux磁盘管理相关(施工中) | kevin的博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="kevin">
+    
+
+    
+    <meta name="description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些是摘抄自互联网,如有雷同,实属荣幸.
+文件系统ext4linux kernel 自2.6.28 开始正式支持新的文件系统Ext4, 比前面的Ext3系统有很多增强,因此也是默认使用的文件系统.
+Btrfs:Ceph-Osd在Btrfs上面有最佳的性能,支持Copy-On-Write, Writable snapshots. 问题是该文件系统显示">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux磁盘管理相关(施工中)">
+<meta property="og:url" content="https://kevinpig.github.io/2015/11/17/linux-filesystem-related/index.html">
+<meta property="og:site_name" content="kevin的博客">
+<meta property="og:description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些是摘抄自互联网,如有雷同,实属荣幸.
+文件系统ext4linux kernel 自2.6.28 开始正式支持新的文件系统Ext4, 比前面的Ext3系统有很多增强,因此也是默认使用的文件系统.
+Btrfs:Ceph-Osd在Btrfs上面有最佳的性能,支持Copy-On-Write, Writable snapshots. 问题是该文件系统显示">
+<meta property="og:updated_time" content="2015-11-17T09:11:41.201Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="linux磁盘管理相关(施工中)">
+<meta name="twitter:description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些是摘抄自互联网,如有雷同,实属荣幸.
+文件系统ext4linux kernel 自2.6.28 开始正式支持新的文件系统Ext4, 比前面的Ext3系统有很多增强,因此也是默认使用的文件系统.
+Btrfs:Ceph-Osd在Btrfs上面有最佳的性能,支持Copy-On-Write, Writable snapshots. 问题是该文件系统显示">
+
+    
+    <link rel="alternative" href="/atom.xml" title="kevin的博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="kevin的博客" title="kevin的博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="kevin的博客">kevin的博客</a></h1>
+				<h2 class="blog-motto">记录工作生活中的点滴</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:kevinpig.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/17/linux-filesystem-related/" title="linux磁盘管理相关(施工中)" itemprop="url">linux磁盘管理相关(施工中)</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-17T01:49:47.000Z" itemprop="datePublished"> 发表于 2015-11-17</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#文件系统"><span class="toc-number">1.</span> <span class="toc-text">文件系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ext4"><span class="toc-number">1.1.</span> <span class="toc-text">ext4</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Btrfs:"><span class="toc-number">1.2.</span> <span class="toc-text">Btrfs:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XFS"><span class="toc-number">1.3.</span> <span class="toc-text">XFS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#linux_命令"><span class="toc-number">2.</span> <span class="toc-text">linux 命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#df"><span class="toc-number">2.1.</span> <span class="toc-text">df</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fdisk"><span class="toc-number">2.2.</span> <span class="toc-text">fdisk</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#parted"><span class="toc-number">2.3.</span> <span class="toc-text">parted</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LVM"><span class="toc-number">3.</span> <span class="toc-text">LVM</span></a></li></ol>
+		
+		</div>
+		
+		<p>声明:<br>本博客欢迎转发<br>内容系本人学习, 研究和总结,有些是摘抄自互联网,如有雷同,实属荣幸.</p>
+<h2 id="文件系统">文件系统</h2><h3 id="ext4">ext4</h3><p>linux kernel 自2.6.28 开始正式支持新的文件系统Ext4, 比前面的Ext3系统有很多增强,因此也是默认使用的文件系统.</p>
+<h3 id="Btrfs:">Btrfs:</h3><p>Ceph-Osd在Btrfs上面有最佳的性能,支持Copy-On-Write, Writable snapshots. 问题是该文件系统显示还不是Production Ready, 不适合生产环境部署, 主要使用来作为测试.</p>
+<h3 id="XFS">XFS</h3><p>日志文件系统, 使Ceph系统中使用最多的文件系统,也是作为Ceph-OSD推荐使用的文件系统.</p>
+<a id="more"></a>
+<h2 id="linux_命令">linux 命令</h2><h3 id="df">df</h3><p>检查文件系统的磁盘占用情况,以及磁盘系统的挂载情况.<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># df -hT           #以可读方式显示,并且列出磁盘文件系统类型</span></span><br><span class="line">文件系统                           类型      容量  已用  可用 已用% 挂载点</span><br><span class="line">/dev/mapper/ubuntu--kylin--vg-root ext4      <span class="number">443</span>G  <span class="number">227</span>G  <span class="number">194</span>G   <span class="number">55</span>% /</span><br><span class="line">none                               tmpfs     <span class="number">4.0</span>K     <span class="number">0</span>  <span class="number">4.0</span>K    <span class="number">0</span>% /sys/fs/cgroup</span><br><span class="line">udev                               devtmpfs  <span class="number">7.8</span>G  <span class="number">4.0</span>K  <span class="number">7.8</span>G    <span class="number">1</span>% /dev</span><br><span class="line">tmpfs                              tmpfs     <span class="number">1.6</span>G  <span class="number">1.2</span>M  <span class="number">1.6</span>G    <span class="number">1</span>% /run</span><br><span class="line">none                               tmpfs     <span class="number">5.0</span>M     <span class="number">0</span>  <span class="number">5.0</span>M    <span class="number">0</span>% /run/lock</span><br><span class="line">none                               tmpfs     <span class="number">7.8</span>G   <span class="number">43</span>M  <span class="number">7.8</span>G    <span class="number">1</span>% /run/shm</span><br><span class="line">none                               tmpfs     <span class="number">100</span>M   <span class="number">52</span>K  <span class="number">100</span>M    <span class="number">1</span>% /run/user</span><br><span class="line">/dev/sda1                          ext2      <span class="number">236</span>M   <span class="number">83</span>M  <span class="number">142</span>M   <span class="number">37</span>% /boot</span><br></pre></td></tr></table></figure></p>
+<h3 id="fdisk">fdisk</h3><p>磁盘分区工具,不支持2TB以上的磁盘<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"># fdisk -l #查看硬盘信息</span><br><span class="line"></span><br><span class="line">在终端输入 fdisk /dev/vdb</span><br><span class="line">之后键入 m 可以看到帮助信息</span><br><span class="line">键入 n 添加新分区</span><br><span class="line">键入 p 选择添加主分区</span><br><span class="line"></span><br><span class="line">之后,fdisk会让你选择分区的开始值和结束值</span><br><span class="line">最后键入 w 保存所有并退出,完成新硬盘的分区</span><br><span class="line"></span><br><span class="line">root@lrf-desktop-test:/home/ubuntu# fdisk -l</span><br><span class="line"></span><br><span class="line">Disk /dev/vda: 42.9 GB, 42949672960 bytes</span><br><span class="line">4 heads, 32 sectors/track, 655360 cylinders, total 83886080 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line">Disk identifier: 0x000c5852</span><br><span class="line"></span><br><span class="line">   Device Boot      <span class="operator"><span class="keyword">Start</span>         <span class="keyword">End</span>      Blocks   <span class="keyword">Id</span>  <span class="keyword">System</span></span><br><span class="line">/dev/vda1   *        <span class="number">2048</span>    <span class="number">83886079</span>    <span class="number">41942016</span>   <span class="number">83</span>  Linux</span><br><span class="line"></span><br><span class="line">Disk /dev/vdb: <span class="number">107.4</span> GB, <span class="number">107374182400</span> <span class="keyword">bytes</span></span><br><span class="line"><span class="number">16</span> heads, <span class="number">63</span> sectors/track, <span class="number">208050</span> cylinders, total <span class="number">209715200</span> sectors</span><br><span class="line">Units = sectors <span class="keyword">of</span> <span class="number">1</span> * <span class="number">512</span> = <span class="number">512</span> <span class="keyword">bytes</span></span><br><span class="line">Sector <span class="keyword">size</span> (<span class="keyword">logical</span>/<span class="keyword">physical</span>): <span class="number">512</span> <span class="keyword">bytes</span> / <span class="number">512</span> <span class="keyword">bytes</span></span><br><span class="line"><span class="keyword">I</span>/O <span class="keyword">size</span> (<span class="keyword">minimum</span>/<span class="keyword">optimal</span>): <span class="number">512</span> <span class="keyword">bytes</span> / <span class="number">512</span> <span class="keyword">bytes</span></span><br><span class="line">Disk identifier: <span class="number">0x29dd845e</span></span><br><span class="line"></span><br><span class="line">   Device Boot      <span class="keyword">Start</span>         <span class="keyword">End</span>      Blocks   <span class="keyword">Id</span>  <span class="keyword">System</span></span><br><span class="line">/dev/vdb1            <span class="number">2048</span>   <span class="number">104859647</span>    <span class="number">52428800</span>   <span class="number">83</span>  Linux</span><br><span class="line">/dev/vdb2       <span class="number">104859648</span>   <span class="number">209715199</span>    <span class="number">52427776</span>   <span class="number">83</span>  Linux</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="parted">parted</h3><h2 id="LVM">LVM</h2><p>LVM是Logical Volume Manager的简写, 它由Heinz Mauelshagen在Linux 2.4内核上实现。LVM将一个或多个硬盘的分区在逻辑上集合，相当于一个大硬盘来使用，当硬盘的空间不够使用的时候，可以继续将其它的硬盘的分区加入其中，这样可以实现磁盘空间的动态管理，相对于普通的磁盘分区有很大的灵活性。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="https://kevinpig.github.io/2015/11/17/linux-filesystem-related/" data-title="linux磁盘管理相关(施工中) | kevin的博客" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/11/17/rabbitmq-basic/" title="Rabbitmq基础指南">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Rabbitmq基础指南</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/11/04/linux-monitor/"  title="linux系统工具总结">
+ <strong>下一篇：</strong><br/> 
+ <span>linux系统工具总结
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/11/17/linux-filesystem-related/" data-title="linux磁盘管理相关(施工中)" data-url="https://kevinpig.github.io/2015/11/17/linux-filesystem-related/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#文件系统"><span class="toc-number">1.</span> <span class="toc-text">文件系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ext4"><span class="toc-number">1.1.</span> <span class="toc-text">ext4</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Btrfs:"><span class="toc-number">1.2.</span> <span class="toc-text">Btrfs:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XFS"><span class="toc-number">1.3.</span> <span class="toc-text">XFS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#linux_命令"><span class="toc-number">2.</span> <span class="toc-text">linux 命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#df"><span class="toc-number">2.1.</span> <span class="toc-text">df</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fdisk"><span class="toc-number">2.2.</span> <span class="toc-text">fdisk</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#parted"><span class="toc-number">2.3.</span> <span class="toc-text">parted</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LVM"><span class="toc-number">3.</span> <span class="toc-text">LVM</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/dev/" title="dev">dev<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/云计算/" title="云计算">云计算<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/转载/云计算/" title="云计算">云计算<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/转载/" title="转载">转载<sup>3</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Openstack/" title="Openstack">Openstack<sup>10</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Devops/" title="Devops">Devops<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/vagrant/" title="vagrant">vagrant<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/云计算/" title="云计算">云计算<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Qos/" title="Qos">Qos<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/虚拟化/" title="虚拟化">虚拟化<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/系统管理/" title="系统管理">系统管理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/emacs/" title="emacs">emacs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/image/" title="image">image<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m kevin in united-imaging.com. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/kevinpig" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="kevin">kevin</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"kevinpig"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

@@ -12,24 +12,24 @@
 
     
     <meta name="description" content="前言　　本文以Ubuntu 14.04为例来介绍如何创建windows的openstack虚拟机镜像。安装之前的装备工作包括　　1. 准备一个windows 2008的iso文件　　2. 下载virtio-win的驱动文件　　3. 下载cloud-init的安装程序
-1. 创建镜像磁盘创建一个windows镜像磁盘，raw格式，大小为15G1$ qemu-img create -f qcow2 w">
+创建镜像磁盘创建一个windows镜像磁盘，raw格式，大小为15G1$ qemu-img create -f qcow2 winS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何创建openstack windows 虚拟机镜像">
 <meta property="og:url" content="https://kevinpig.github.io/2015/08/07/2015-08-07-how-to-create-openstack-windows-image/index.html">
 <meta property="og:site_name" content="kevin的博客">
 <meta property="og:description" content="前言　　本文以Ubuntu 14.04为例来介绍如何创建windows的openstack虚拟机镜像。安装之前的装备工作包括　　1. 准备一个windows 2008的iso文件　　2. 下载virtio-win的驱动文件　　3. 下载cloud-init的安装程序
-1. 创建镜像磁盘创建一个windows镜像磁盘，raw格式，大小为15G1$ qemu-img create -f qcow2 w">
+创建镜像磁盘创建一个windows镜像磁盘，raw格式，大小为15G1$ qemu-img create -f qcow2 winS">
 <meta property="og:image" content="http://static.oschina.net/uploads/space/2012/1212/203412_D0MJ_123777.jpg">
 <meta property="og:image" content="http://www.cloudbase.it/wp-content/uploads/2015/07/cloudbase-init-01.png">
 <meta property="og:image" content="http://www.cloudbase.it/wp-content/uploads/2015/07/cloudbase-init-02.png">
 <meta property="og:image" content="http://www.cloudbase.it/wp-content/uploads/2015/07/cloudbase-init-03.png">
 <meta property="og:image" content="http://www.cloudbase.it/wp-content/uploads/2012/12/CloudbaseInit_service.png">
 <meta property="og:image" content="http://static.oschina.net/uploads/space/2012/1212/204846_9VEc_123777.jpg">
-<meta property="og:updated_time" content="2015-08-13T02:41:14.000Z">
+<meta property="og:updated_time" content="2015-12-12T06:09:51.535Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何创建openstack windows 虚拟机镜像">
 <meta name="twitter:description" content="前言　　本文以Ubuntu 14.04为例来介绍如何创建windows的openstack虚拟机镜像。安装之前的装备工作包括　　1. 准备一个windows 2008的iso文件　　2. 下载virtio-win的驱动文件　　3. 下载cloud-init的安装程序
-1. 创建镜像磁盘创建一个windows镜像磁盘，raw格式，大小为15G1$ qemu-img create -f qcow2 w">
+创建镜像磁盘创建一个windows镜像磁盘，raw格式，大小为15G1$ qemu-img create -f qcow2 winS">
 
     
     <link rel="alternative" href="/atom.xml" title="kevin的博客" type="application/atom+xml">
@@ -105,28 +105,29 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-_创建镜像磁盘"><span class="toc-number">2.</span> <span class="toc-text">1. 创建镜像磁盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-_创建虚拟机"><span class="toc-number">3.</span> <span class="toc-text">2. 创建虚拟机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-_安装cloud-init"><span class="toc-number">4.</span> <span class="toc-text">3. 安装cloud-init</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-_其他工作"><span class="toc-number">5.</span> <span class="toc-text">4. 其他工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-_上传虚拟机"><span class="toc-number">6.</span> <span class="toc-text">5. 上传虚拟机</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考链接"><span class="toc-number"></span> <span class="toc-text">参考链接</span></a>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建镜像磁盘"><span class="toc-number">2.</span> <span class="toc-text">创建镜像磁盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建虚拟机"><span class="toc-number">3.</span> <span class="toc-text">创建虚拟机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装cloud-init"><span class="toc-number">4.</span> <span class="toc-text">安装cloud-init</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他工作"><span class="toc-number">5.</span> <span class="toc-text">其他工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#上传虚拟机"><span class="toc-number">6.</span> <span class="toc-text">上传虚拟机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建ubuntu的虚拟机镜像"><span class="toc-number">7.</span> <span class="toc-text">创建ubuntu的虚拟机镜像</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考链接"><span class="toc-number"></span> <span class="toc-text">参考链接</span></a>
 		
 		</div>
 		
 		<h2 id="前言">前言</h2><p>　　本文以Ubuntu 14.04为例来介绍如何创建windows的openstack虚拟机镜像。安装之前的装备工作包括<br>　　1. 准备一个windows 2008的iso文件<br>　　2. 下载virtio-win的驱动文件<br>　　3. 下载cloud-init的安装程序</p>
-<h2 id="1-_创建镜像磁盘">1. 创建镜像磁盘</h2><p>创建一个windows镜像磁盘，raw格式，大小为15G<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ qemu-<span class="tag">img</span> create -f qcow2 winServer2008<span class="class">.img</span> <span class="number">15</span>G</span><br></pre></td></tr></table></figure></p>
+<h2 id="创建镜像磁盘">创建镜像磁盘</h2><p>创建一个windows镜像磁盘，raw格式，大小为15G<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ qemu-<span class="tag">img</span> create -f qcow2 winServer2008<span class="class">.img</span> <span class="number">15</span>G</span><br></pre></td></tr></table></figure></p>
 <a id="more"></a>
-<h2 id="2-_创建虚拟机">2. 创建虚拟机</h2><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ virt-install --connect qemu:///system -n winServer2008 -r 2048 \</span><br><span class="line"> -<span class="ruby">-disk path=<span class="regexp">/home/lrf</span><span class="regexp">/imageCreate/win</span>Server2008.img,size=<span class="number">15</span>,format=qcow2,bus=virtio,cache=none \</span><br><span class="line"></span> -<span class="ruby">-cdrom=<span class="regexp">/home/lrf</span><span class="regexp">/cn_windows_server_2008_r2_with_sp1_x64_dvd_617598.iso \</span><br><span class="line"></span></span> -<span class="ruby"><span class="regexp">-os-type=windows --os-variant=win2k8 \</span><br><span class="line"></span></span> -<span class="ruby"><span class="regexp">-network network=default,model=virtio \</span><br><span class="line"></span></span> -<span class="ruby"><span class="regexp">-disk path=/home</span><span class="regexp">/lrf/virtio</span>-win-<span class="number">0</span>.<span class="number">1</span>-<span class="number">100</span>.iso,device=cdrom,perms=ro</span></span><br></pre></td></tr></table></figure>
+<h2 id="创建虚拟机">创建虚拟机</h2><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ virt-install --connect qemu:///system -n winServer2008 -r 2048 \</span><br><span class="line"> -<span class="ruby">-disk path=<span class="regexp">/home/lrf</span><span class="regexp">/imageCreate/win</span>Server2008.img,size=<span class="number">15</span>,format=qcow2,bus=virtio,cache=none \</span><br><span class="line"></span> -<span class="ruby">-cdrom=<span class="regexp">/home/lrf</span><span class="regexp">/cn_windows_server_2008_r2_with_sp1_x64_dvd_617598.iso \</span><br><span class="line"></span></span> -<span class="ruby"><span class="regexp">-os-type=windows --os-variant=win2k8 \</span><br><span class="line"></span></span> -<span class="ruby"><span class="regexp">-network network=default,model=virtio \</span><br><span class="line"></span></span> -<span class="ruby"><span class="regexp">-disk path=/home</span><span class="regexp">/lrf/virtio</span>-win-<span class="number">0</span>.<span class="number">1</span>-<span class="number">100</span>.iso,device=cdrom,perms=ro</span></span><br></pre></td></tr></table></figure>
 <p>　　以上参数比较多，不一一解释，详细请参看man virt-install。命令成功执行后提示‘域安装仍在进行，请等待完成安装’。这时候我们在Shell执行<code>virt-manager</code>来打开图形配置界面。<br>　　连接成功后，和普通安装操作系统没有区别。但在分区时需要加载驱动程序，选择Win7-AMD64即可。<br>　　<img src="http://static.oschina.net/uploads/space/2012/1212/203412_D0MJ_123777.jpg" alt="">
 　　
 　　</p>
-<h2 id="3-_安装cloud-init">3. 安装cloud-init</h2><p><img src="http://www.cloudbase.it/wp-content/uploads/2015/07/cloudbase-init-01.png" alt=""></p>
+<h2 id="安装cloud-init">安装cloud-init</h2><p><img src="http://www.cloudbase.it/wp-content/uploads/2015/07/cloudbase-init-01.png" alt=""></p>
 <p><img src="http://www.cloudbase.it/wp-content/uploads/2015/07/cloudbase-init-02.png" alt=""></p>
 <p><img src="http://www.cloudbase.it/wp-content/uploads/2015/07/cloudbase-init-03.png" alt=""></p>
 <p>安装完成以后你可以找到名为Cloud Initialization Service的windows服务，该服务会在你下次重新启动windows的时候自动启动<br><img src="http://www.cloudbase.it/wp-content/uploads/2012/12/CloudbaseInit_service.png" alt=""></p>
 <p>安装完成Cloud-Init请执行Sysprep来生成一个通用的Image，这样我们就可以从该image复制多个新的实例。</p>
-<h2 id="4-_其他工作">4. 其他工作</h2><ol>
+<h2 id="其他工作">其他工作</h2><ol>
 <li>在设备管理器中确认磁盘驱动器和网络驱动器使用的为redhat virto</li>
 <li>为上传的镜像打开远程连接 (optional)</li>
 <li>上传镜像完成后，设置安全策略，为远程连接开放3389端口<br><img src="http://static.oschina.net/uploads/space/2012/1212/204846_9VEc_123777.jpg" alt=""></li>
 </ol>
-<h2 id="5-_上传虚拟机">5. 上传虚拟机</h2><p>　　通过Horizon的UI我们可以上传我们的镜像文件到Openstack中，接下来解释测试该镜像是否可以正确的启动虚拟机。<br>　　<br>作者：<a href="ruifei.liu@united-imaging.com">kevinpig</a></p>
+<h2 id="上传虚拟机">上传虚拟机</h2><p>　　通过Horizon的UI我们可以上传我们的镜像文件到Openstack中，接下来解释测试该镜像是否可以正确的启动虚拟机。<br>　　<br>作者：<a href="ruifei.liu@united-imaging.com">kevinpig</a></p>
+<h2 id="创建ubuntu的虚拟机镜像">创建ubuntu的虚拟机镜像</h2><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ qemu-img create -f raw ubuntu-<span class="number">14</span>.<span class="number">04</span>-log-<span class="keyword">template</span>.raw <span class="number">15</span>G</span><br><span class="line">$ virt-install --virt-<span class="keyword">type</span> kvm --name ubuntu-<span class="number">1404</span>-log --ram <span class="number">2048</span> \</span><br><span class="line">  --disk path=/home/lrf/imageCreate/ubuntu-<span class="number">14</span>.<span class="number">04</span>-log-<span class="keyword">template</span>.raw,size=<span class="number">15</span>,format=raw \</span><br><span class="line">  --cdrom=/home/lrf/cloud/ubuntu-<span class="number">14</span>.<span class="number">04</span>.<span class="number">1</span>-server-amd64.iso \</span><br><span class="line">  --graphic vnc,listen=<span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span> --noautoconsole \</span><br><span class="line">  --os-<span class="keyword">type</span> linux --os-variant=ubuntutrusty \</span><br><span class="line">  --network network=default</span><br><span class="line">$ virt-manager</span><br><span class="line"><span class="comment"># install cloud-init</span></span><br><span class="line">$ apt-get install cloud-init</span><br><span class="line">$ dpkg-reconfigure cloud-init</span><br><span class="line"></span><br><span class="line">$ virt-sysprep -d ubuntu-<span class="number">1404</span>-log</span><br></pre></td></tr></table></figure>
 <h1 id="参考链接">参考链接</h1><ol>
 <li><a href="http://my.oschina.net/guol/blog/95449" target="_blank" rel="external">http://my.oschina.net/guol/blog/95449</a></li>
 <li><a href="http://www.tuicool.com/articles/7ZR73q" target="_blank" rel="external">http://www.tuicool.com/articles/7ZR73q</a></li>
@@ -190,7 +191,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-_创建镜像磁盘"><span class="toc-number">2.</span> <span class="toc-text">1. 创建镜像磁盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-_创建虚拟机"><span class="toc-number">3.</span> <span class="toc-text">2. 创建虚拟机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-_安装cloud-init"><span class="toc-number">4.</span> <span class="toc-text">3. 安装cloud-init</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-_其他工作"><span class="toc-number">5.</span> <span class="toc-text">4. 其他工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-_上传虚拟机"><span class="toc-number">6.</span> <span class="toc-text">5. 上传虚拟机</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考链接"><span class="toc-number"></span> <span class="toc-text">参考链接</span></a>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建镜像磁盘"><span class="toc-number">2.</span> <span class="toc-text">创建镜像磁盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建虚拟机"><span class="toc-number">3.</span> <span class="toc-text">创建虚拟机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装cloud-init"><span class="toc-number">4.</span> <span class="toc-text">安装cloud-init</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他工作"><span class="toc-number">5.</span> <span class="toc-text">其他工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#上传虚拟机"><span class="toc-number">6.</span> <span class="toc-text">上传虚拟机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建ubuntu的虚拟机镜像"><span class="toc-number">7.</span> <span class="toc-text">创建ubuntu的虚拟机镜像</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考链接"><span class="toc-number"></span> <span class="toc-text">参考链接</span></a>
  
   </div>
 
@@ -237,7 +238,19 @@
 			
 		
 			
-				<li><a href="/tags/image/" title="image">image<sup>1</sup></a></li>
+				<li><a href="/tags/vagrant/" title="vagrant">vagrant<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/云计算/" title="云计算">云计算<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Qos/" title="Qos">Qos<sup>1</sup></a></li>
 			
 		
 			
@@ -245,19 +258,7 @@
 			
 		
 			
-				<li><a href="/tags/vagrant/" title="vagrant">vagrant<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/系统管理/" title="系统管理">系统管理<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/emacs/" title="emacs">emacs<sup>1</sup></a></li>
 			
 		
 			
@@ -265,9 +266,15 @@
 			
 		
 			
-				<li><a href="/tags/Qos/" title="Qos">Qos<sup>1</sup></a></li>
+				<li><a href="/tags/emacs/" title="emacs">emacs<sup>1</sup></a></li>
 			
 		
+			
+				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/image/" title="image">image<sup>1</sup></a></li>
 			
 		
 		</ul>
