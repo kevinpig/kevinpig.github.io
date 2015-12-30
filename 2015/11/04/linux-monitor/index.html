@@ -1,0 +1,556 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>linux系统工具总结 | kevin的博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="kevin">
+    
+
+    
+    <meta name="description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些使摘抄自互联网,如有雷同,实属荣幸.
+网络流量监控iftop
+界面相关说明:
+界面上面显示的是类似刻度尺的刻度范围，为显示流量图形的长条作标尺用的。
+中间的&amp;lt;= =&amp;gt;这两个左右箭头，表示的是流量的方向。
+TX：发送流量RX：接收流量TOTAL：总流量Cumm：运行iftop到目前时间的总流量peak：流量峰值rates：分别表示过去">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux系统工具总结">
+<meta property="og:url" content="https://kevinpig.github.io/2015/11/04/linux-monitor/index.html">
+<meta property="og:site_name" content="kevin的博客">
+<meta property="og:description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些使摘抄自互联网,如有雷同,实属荣幸.
+网络流量监控iftop
+界面相关说明:
+界面上面显示的是类似刻度尺的刻度范围，为显示流量图形的长条作标尺用的。
+中间的&amp;lt;= =&amp;gt;这两个左右箭头，表示的是流量的方向。
+TX：发送流量RX：接收流量TOTAL：总流量Cumm：运行iftop到目前时间的总流量peak：流量峰值rates：分别表示过去">
+<meta property="og:image" content="https://kevinpig.github.io/images/linux_monitor/iftop-interface.jpg">
+<meta property="og:image" content="https://kevinpig.github.io/images/linux_monitor/ncdu-g.jpg">
+<meta property="og:image" content="https://kevinpig.github.io/images/linux_monitor/ncdu-i.jpg">
+<meta property="og:updated_time" content="2015-11-13T02:49:41.660Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="linux系统工具总结">
+<meta name="twitter:description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些使摘抄自互联网,如有雷同,实属荣幸.
+网络流量监控iftop
+界面相关说明:
+界面上面显示的是类似刻度尺的刻度范围，为显示流量图形的长条作标尺用的。
+中间的&amp;lt;= =&amp;gt;这两个左右箭头，表示的是流量的方向。
+TX：发送流量RX：接收流量TOTAL：总流量Cumm：运行iftop到目前时间的总流量peak：流量峰值rates：分别表示过去">
+
+    
+    <link rel="alternative" href="/atom.xml" title="kevin的博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="kevin的博客" title="kevin的博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="kevin的博客">kevin的博客</a></h1>
+				<h2 class="blog-motto">记录工作生活中的点滴</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:kevinpig.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/04/linux-monitor/" title="linux系统工具总结" itemprop="url">linux系统工具总结</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-04T03:29:30.000Z" itemprop="datePublished"> 发表于 2015-11-04</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#网络流量监控"><span class="toc-number">1.</span> <span class="toc-text">网络流量监控</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#iftop"><span class="toc-number">1.1.</span> <span class="toc-text">iftop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nethogs"><span class="toc-number">1.2.</span> <span class="toc-text">nethogs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#netstat"><span class="toc-number">1.3.</span> <span class="toc-text">netstat</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程查看_&_CPU_&_Mem"><span class="toc-number">2.</span> <span class="toc-text">进程查看 & CPU & Mem</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#htop"><span class="toc-number">2.1.</span> <span class="toc-text">htop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#atop"><span class="toc-number">2.2.</span> <span class="toc-text">atop</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#硬盘相关"><span class="toc-number">3.</span> <span class="toc-text">硬盘相关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ncdu_(磁盘目录占用空间计算排序工具)"><span class="toc-number">3.1.</span> <span class="toc-text">ncdu (磁盘目录占用空间计算排序工具)</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>声明:<br>本博客欢迎转发<br>内容系本人学习, 研究和总结,有些使摘抄自互联网,如有雷同,实属荣幸.</p>
+<h2 id="网络流量监控">网络流量监控</h2><h3 id="iftop">iftop</h3><p><img src="/images/linux_monitor/iftop-interface.jpg" alt="iftop_interface"></p>
+<p>界面相关说明:</p>
+<p>界面上面显示的是类似刻度尺的刻度范围，为显示流量图形的长条作标尺用的。</p>
+<p>中间的&lt;= =&gt;这两个左右箭头，表示的是流量的方向。</p>
+<p>TX：发送流量<br>RX：接收流量<br>TOTAL：总流量<br>Cumm：运行iftop到目前时间的总流量<br>peak：流量峰值<br>rates：分别表示过去 2s 10s 40s 的平均流量</p>
+<a id="more"></a>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># iftop -i eth0 -B #设定监测的网卡为eth0, 以byte为单位显示流量</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">高级功能: iftop 通过-f支持pcap-<span class="built_in">filter</span> formatted <span class="built_in">filter</span>的过滤条件设置.</span><br></pre></td></tr></table></figure>
+<h3 id="nethogs">nethogs</h3><p>iftop使按照目的IP地址和端口为视图来显示网络流量,如果想知道那个进程占用了大量的网络流量,就需要以进程为视图来显示网络流量.</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># nethogs eth0</span></span><br></pre></td></tr></table></figure>
+<h3 id="netstat">netstat</h3><p>用于显示各种网络相关信息,如网络连接, 路由表,接口状态. 从总体上看netstat输出分为两部分, 一为有源TCP连接,另一个为有源Unix域套接口.常用参数</p>
+<ol>
+<li>-a (all)显示所有选项,默认不显示LISTEN相关</li>
+<li>-t(tcp) 仅显示tcp相关选项</li>
+<li>-l 仅列出又在Listen的服务状态</li>
+<li>-p 显示建立相关链接的程序名</li>
+<li>-u(udp) 仅显示udp相关选项</li>
+</ol>
+<p>实例<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># netstat -lt  #仅列出所有TCP监听端口</span></span><br><span class="line"><span class="preprocessor"># netstat -pt  #在netstat输出中显示PID和进程名称</span></span><br><span class="line"><span class="preprocessor"># netstat -anp | grep 80 # 查找端口xxx的进程名称</span></span><br><span class="line"><span class="preprocessor"># netstat -lnp | grep 80 # 查找监听端口xxx的进程名称</span></span><br><span class="line"><span class="preprocessor"># netstat -ap | grep ssh # 找出程序运行的端口</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="进程查看_&amp;_CPU_&amp;_Mem">进程查看 &amp; CPU &amp; Mem</h2><h3 id="htop">htop</h3><p>htop——一个可以让用户与之交互的进程查看器。作为文本模式的应用程序，主要用于控制台或 X 终端中。当前具有按树状方式来查看进程，支持颜色主题，可以定制等特性。</p>
+<h3 id="atop">atop</h3><p>Atop 是一个类似 top 的工具，但比 top 更有料。通过 Atop，你能够监视 Linux 系统的性能状况，包括进程活动、CPU、内存、硬盘、网络等方面的使用情况等。</p>
+<h2 id="硬盘相关">硬盘相关</h2><h3 id="ncdu_(磁盘目录占用空间计算排序工具)">ncdu (磁盘目录占用空间计算排序工具)</h3><p>ncdu命令是对传统du命令功能上的增强，不需要像du那样输入大量的命令，就可以计算文件及目录大小并可以按照大小或文件名进行排序</p>
+<p><strong>常用快捷键</strong></p>
+<p>n ：按文件名进行排序<br>s ：按文件大小进行排序<br>r ：重新统计当前文件夹大小<br>g ：用#或百分比显示各文件/目录的大小所占的百分比，例如：</p>
+<p><img src="/images/linux_monitor/ncdu-g.jpg" alt=""></p>
+<p>i : 显示当前文件/目录信息，如下图</p>
+<p><img src="/images/linux_monitor/ncdu-i.jpg" alt=""></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/系统管理/">系统管理</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="https://kevinpig.github.io/2015/11/04/linux-monitor/" data-title="linux系统工具总结 | kevin的博客" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/11/17/linux-filesystem-related/" title="linux磁盘管理相关(施工中)">
+  <strong>上一篇：</strong><br/>
+  <span>
+  linux磁盘管理相关(施工中)</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/10/17/virt-disk-format-qcow2-or-raw/"  title="Openstack中虚拟机镜像格式的选择">
+ <strong>下一篇：</strong><br/> 
+ <span>Openstack中虚拟机镜像格式的选择
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/11/04/linux-monitor/" data-title="linux系统工具总结" data-url="https://kevinpig.github.io/2015/11/04/linux-monitor/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#网络流量监控"><span class="toc-number">1.</span> <span class="toc-text">网络流量监控</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#iftop"><span class="toc-number">1.1.</span> <span class="toc-text">iftop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nethogs"><span class="toc-number">1.2.</span> <span class="toc-text">nethogs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#netstat"><span class="toc-number">1.3.</span> <span class="toc-text">netstat</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程查看_&_CPU_&_Mem"><span class="toc-number">2.</span> <span class="toc-text">进程查看 & CPU & Mem</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#htop"><span class="toc-number">2.1.</span> <span class="toc-text">htop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#atop"><span class="toc-number">2.2.</span> <span class="toc-text">atop</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#硬盘相关"><span class="toc-number">3.</span> <span class="toc-text">硬盘相关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ncdu_(磁盘目录占用空间计算排序工具)"><span class="toc-number">3.1.</span> <span class="toc-text">ncdu (磁盘目录占用空间计算排序工具)</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/dev/" title="dev">dev<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/云计算/" title="云计算">云计算<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/转载/云计算/" title="云计算">云计算<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/转载/" title="转载">转载<sup>3</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Openstack/" title="Openstack">Openstack<sup>10</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Devops/" title="Devops">Devops<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/vagrant/" title="vagrant">vagrant<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/云计算/" title="云计算">云计算<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Qos/" title="Qos">Qos<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/虚拟化/" title="虚拟化">虚拟化<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/系统管理/" title="系统管理">系统管理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/emacs/" title="emacs">emacs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/image/" title="image">image<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m kevin in united-imaging.com. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/kevinpig" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="kevin">kevin</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"kevinpig"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
