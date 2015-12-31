@@ -1,18 +1,21 @@
+---
+layout: post
 title: git 常用技能
 date: 2015-08-12 14:16:31
 tags: git
 categories:
  - 转载
 ---
+
 git常用技能总结，原文链接 http://wuchong.me/blog/2015/03/30/git-useful-skills/
 
-学习使用 Git 已经一年有余，一些常用技能也用的炉火纯青了，但偶尔碰到一些生僻的技能，总是需要去 Google，第二次用时又忘了。所以这是一篇我自认为比较重要的 Git 技能表，主要供自己查阅使用，反复查阅能够加深印象，提升技能熟练度。如果你是还不知道 Git 是什么，建议先阅读[廖雪峰的Git教程](http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000) 
+学习使用 Git 已经一年有余，一些常用技能也用的炉火纯青了，但偶尔碰到一些生僻的技能，总是需要去 Google，第二次用时又忘了。所以这是一篇我自认为比较重要的 Git 技能表，主要供自己查阅使用，反复查阅能够加深印象，提升技能熟练度。如果你是还不知道 Git 是什么，建议先阅读[廖雪峰的Git教程](http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000)
 
 ## 工作流
 
 Git 最核心的一个概念就是工作流。工作区(Workspace)是电脑中实际的目录；暂存区(Index)像个缓存区域，临时保存你的改动；最后是版本库(Repository)，分为本地仓库和远程仓库。下图真是一图胜千言啊，就无耻盗图了。
 
-![](http://ww4.sinaimg.cn/mw690/81b78497jw1eqnk1bkyaij20e40bpjsm.jpg)
+![Git Flow](/images/2015/12/git-workflow.jpg)
 
 <!--more-->
 
@@ -34,7 +37,7 @@ git push origin master    #推送到远程master分支
 
 git clone git@server-name:path/repo-name.git   #克隆远程仓库到本地(能看到master分支)
 git checkout -b dev origin/dev  #创建远程origin的dev分支到本地，并命名为dev
-git pull origin master          #从远程分支进行更新 
+git pull origin master          #从远程分支进行更新
 git fetch origin master         #获取远程分支上的数据
 
 $ git branch --set-upstream branch-name origin/branch-name，可以建立起本地分支和远程分支的关联，之后可以直接git pull从远程抓取分支。
@@ -68,8 +71,8 @@ git reset HEAD <file>   #丢弃暂存区上某个文件的修改，重新放回�
 
 ### 查看差异
 
-git diff              #查看未暂存的文件更新 
-git diff --cached     #查看已暂存文件的更新 
+git diff              #查看未暂存的文件更新
+git diff --cached     #查看已暂存文件的更新
 git diff HEAD -- readme.txt  #查看工作区和版本库里面最新版本的区别
 git diff <source_branch> <target_branch>  #在合并改动之前，预览两个分支的差异
 
@@ -101,7 +104,7 @@ git branch -d develop       #删除 develop 分支
 ## 标签
 ### 显示标签
 
-git tag         #列出现有标签 
+git tag         #列出现有标签
 git show <tagname>  #显示标签信息
 
 ### 创建标签
@@ -126,5 +129,5 @@ git push origin :refs/tags/<tagname>      #删除远程标签
 
 git config user.name "xx"               #设置 commit 的用户
 git config user.email.com "xx@xx.com"   #设置 commit 的邮箱
+git config core.editor vim
 git config format.pretty oneline        #显示历史记录时，每个提交的信息只显示一行
-
