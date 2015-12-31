@@ -1,6 +1,6 @@
 ---
 layout: post
-title: write-blog-with-atom
+title: 使用Atom进行Hexo博客的编写
 date: '2015-12-30 20:10'
 ---
 
