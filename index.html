@@ -81,7 +81,114 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/12/30/2015/2015-12-30-write-blog-with-atom/" title="write-blog-with-atom" itemprop="url">write-blog-with-atom</a>
+      <a href="/2015/12/31/2015/2015-12-31-git-flow/" title="git源代码管理模型" itemprop="url">git源代码管理模型</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-31T06:59:00.000Z" itemprop="datePublished"> 发表于 2015-12-31</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>声明:<br>本博客欢迎转发<br>内容系本人学习, 研究和总结,有些是摘抄自互联网,如有雷同,实属荣幸.</p>
+<h1 id="Git_Flow_是什么">Git Flow 是什么</h1><p>Git Flow是构建在Git之上的一个组织软件开发活动的模型，是在Git之上构建的一项软件开发最佳实践。Git Flow是一套使用Git进行源代码管理时的一套行为规范和简化部分Git操作的工具。</p>
+<p>2010年5月，在一篇名为“<a href="http://nvie.com/posts/a-successful-git-branching-model/" target="_blank" rel="external">一种成功的Git分支模型</a>”的博文中，@nvie介绍了一种在Git之上的软件开发模型。通过利用Git创建和管理分支的能力，为每个分支设定具有特定的含义名称，并将软件生命周期中的各类活动归并到不同的分支上。实现了软件开发过程不同操作的相互隔离。这种软件开发的活动模型被nwie称为“Git Flow”。</p>
+<p>一般而言，软件开发模型有常见的瀑布模型、迭代开发模型、以及最近出现的敏捷开发模型等不同的模型。每种模型有各自应用场景。Git Flow重点解决的是由于源代码在开发过程中的各种冲突导致开发活动混乱的问题。因此，Git flow可以很好的于各种现有开发模型相结合使用。</p>
+<p>在开始研究Git Flow的具体内容前，下面这张图可以看到模型的全貌（引自nvie的<a href="http://nvie.com/posts/a-successful-git-branching-model/" target="_blank" rel="external">博文</a>)：</p>
+<p><img src="/images/2015/12/git-flow.png" alt="Git Flow"></p>
+<h1 id="Git_Flow_中的分支">Git Flow 中的分支</h1><p>Git Flow模型中定义了主分支和辅助分支两类分支。其中主分支用于组织与软件开发、部署相关的活动；辅助分支组织为了解决特定的问题而进行的各种开发活动。</p>
+<h2 id="主分支">主分支</h2><p>主分支是所有开发活动的核心分支。所有的开发活动产生的输出物最终都会反映到主分支的代码中。主分支分为master分支和development分支。</p>
+<p><img src="/images/2015/12/Main-branch.png" alt=" Main"></p>
+<h3 id="master分支">master分支</h3><p>master分支上存放的应该是随时可供在生产环境中部署的代码（Production Ready state）。当开发活动告一段落，产生了一份新的可供部署的代码时，master分支上的代码会被更新。同时，每一次更新，最好添加对应的版本号标签（TAG）。</p>
+<h3 id="develop分支">develop分支</h3><p>develop分支是保存当前最新开发成果的分支。通常这个分支上的代码也是可进行每日夜间发布的代码（Nightly build）。因此这个分支有时也可以被称作“integration branch”。</p>
+<p>当develop分支上的代码已实现了软件需求说明书中所有的功能，通过了所有的测试后，并且代码已经足够稳定时，就可以将所有的开发成果合并回master分支了。对于master分支上的新提交的代码建议都打上一个新的版本号标签（TAG），供后续代码跟踪使用。</p>
+<p>因此，每次将develop分支上的代码合并回master分支时，我们都可以认为一个新的可供在生产环境中部署的版本就产生了。通常而言，“仅在发布新的可供部署的代码时才更新master分支上的代码”是推荐所有人都遵守的行为准则。基于此，理论上说，每当有代码提交到master分支时，我们可以使用Git Hook触发软件自动测试以及生产环境代码的自动更新工作。这些自动化操作将有利于减少新代码发布之后的一些事务性工作。</p>
+<h2 id="辅助分支">辅助分支</h2><p>辅助分支是用于组织解决特定问题的各种软件开发活动的分支。辅助分支主要用于组织软件新功能的并行开发、简化新功能开发代码的跟踪、辅助完成版本发布工作以及对生产代码的缺陷进行紧急修复工作。这些分支与主分支不同，通常只会在有限的时间范围内存在。</p>
+<p>辅助分支包括：</p>
+<ul>
+<li>用于开发新功能时所使用的feature分支；</li>
+<li>用于辅助版本发布的release分支；</li>
+<li>用于修正生产代码中的缺陷的hotfix分支。</li>
+</ul>
+<p>以上这些分支都有固定的使用目的和分支操作限制。从单纯技术的角度说，这些分支与Git其他分支并没有什么区别，但通过命名，我们定义了使用这些分支的方法。</p>
+<h3 id="feature分支">feature分支</h3><p>使用规范：</p>
+<p>可以从develop分支发起feature分支<br>代码必须合并回develop分支<br>feature分支的命名可以使用除master，develop，release-<em>，hotfix-</em>之外的任何名称<br>feature分支（有时也可以被叫做“topic分支”）通常是在开发一项新的软件功能的时候使用，这个分支上的代码变更最终合并回develop分支或者干脆被抛弃掉（例如实验性且效果不好的代码变更）。</p>
+<p>一般而言，feature分支代码可以保存在开发者自己的代码库中而不强制提交到主代码库里</p>
+<p><img src="/images/2015/12/feature.png" alt=" Hotfix branch"></p>
+<h3 id="release分支">release分支</h3><p>使用规范：</p>
+<ul>
+<li>可以从develop分支派生</li>
+<li>必须合并回develop分支和master分支</li>
+<li>分支命名惯例：release-*</li>
+</ul>
+<p>release分支是为发布新的产品版本而设计的。在这个分支上的代码允许做小的缺陷修正、准备发布版本所需的各项说明信息（版本号、发布时间、编译时间等等）。通过在release分支上进行这些工作可以让develop分支空闲出来以接受新的feature分支上的代码提交，进入新的软件开发迭代周期。</p>
+<p>当develop分支上的代码已经包含了所有即将发布的版本中所计划包含的软件功能，并且已通过所有测试时，我们就可以考虑准备创建release分支了。而所有在当前即将发布的版本之外的业务需求一定要确保不能混到release分支之内（避免由此引入一些不可控的系统缺陷）。</p>
+<p>成功的派生了release分支，并被赋予版本号之后，develop分支就可以为“下一个版本”服务了。所谓的“下一个版本”是在当前即将发布的版本之后发布的版本。版本号的命名可以依据项目定义的版本号命名规则进行。</p>
+<p><img src="/images/2015/12/release-branch.png" alt=" Release"></p>
+<h3 id="hotfix分支">hotfix分支</h3><p>使用规范：</p>
+<ul>
+<li>可以从master分支派生</li>
+<li>必须合并回master分支和develop分支</li>
+<li>分支命名惯例：hotfix-*</li>
+</ul>
+<p>除了是计划外创建的以外，hotfix分支与release分支十分相似：都可以产生一个新的可供在生产环境部署的软件版本。</p>
+<p>当生产环境中的软件遇到了异常情况或者发现了严重到必须立即修复的软件缺陷的时候，就需要从master分支上指定的TAG版本派生hotfix分支来组织代码的紧急修复工作。</p>
+<p>这样做的显而易见的好处是不会打断正在进行的develop分支的开发工作，能够让团队中负责新功能开发的人与负责代码紧急修复的人并行的开展工作。</p>
+<p><img src="/images/2015/12/hotfix.png" alt=" Release"></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/转载/">转载</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/git/">git</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/31/2015/2015-12-31-git-flow/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/31/2015/2015-12-31-git-flow/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/30/2015/2015-12-30-write-blog-with-atom/" title="使用Atom进行Hexo博客的编写" itemprop="url">使用Atom进行Hexo博客的编写</a>
   </h1>
   <p class="article-author">By
        
@@ -103,22 +210,11 @@
 <figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="char">$ </span>git clone <span class="method">https:</span>//github.com/travs/markdown-pdf</span><br><span class="line"><span class="char">$ </span>cd markdown-pdf</span><br><span class="line"><span class="char">$ </span>npm install</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<h3 id="博客创建">博客创建</h3><p><img src="/images/2015/12/new_post.gif" alt="Create New Post"></p>
-<h3 id="博客书写">博客书写</h3><ol>
-<li><p>Insert Image</p>
-<p><img src="/images/2015/12/insert_image.gif" alt="Insert Image"></p>
-</li>
-<li><p>Insert reference link</p>
-<p><img src="/images/2015/12/insert_link.gif" alt="insert reference"></p>
-</li>
-<li>Insert table</li>
-</ol>
-<h3 id="博客发布">博客发布</h3><p> 在Shell中执行hexo命令来执行博客的发布和Push源文件到github中</p>
-<h2 id="转化为pdf">转化为pdf</h2><p> Ctrl+Shift-P 执行 Markdown Pdf:Convert</p>
-
         
         
         <p class="article-more-link">
+          
+            <a href="/2015/12/30/2015/2015-12-30-write-blog-with-atom/#more">Read More</a>
           
        </p>
     </div>
@@ -154,7 +250,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/17/rabbitmq-basic/" title="Rabbitmq基础指南" itemprop="url">Rabbitmq基础指南</a>
+      <a href="/2015/11/17/old/rabbitmq-basic/" title="Rabbitmq基础指南" itemprop="url">Rabbitmq基础指南</a>
   </h1>
   <p class="article-author">By
        
@@ -322,7 +418,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/11/17/rabbitmq-basic/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/17/rabbitmq-basic/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/11/17/old/rabbitmq-basic/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/17/old/rabbitmq-basic/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -342,7 +438,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/17/linux-filesystem-related/" title="linux磁盘管理相关(施工中)" itemprop="url">linux磁盘管理相关(施工中)</a>
+      <a href="/2015/11/17/old/linux-filesystem-related/" title="linux磁盘管理相关(施工中)" itemprop="url">linux磁盘管理相关(施工中)</a>
   </h1>
   <p class="article-author">By
        
@@ -363,7 +459,7 @@
         
         <p class="article-more-link">
           
-            <a href="/2015/11/17/linux-filesystem-related/#more">Read More</a>
+            <a href="/2015/11/17/old/linux-filesystem-related/#more">Read More</a>
           
        </p>
     </div>
@@ -379,7 +475,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/11/17/linux-filesystem-related/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/17/linux-filesystem-related/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/11/17/old/linux-filesystem-related/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/17/old/linux-filesystem-related/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -399,7 +495,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/04/linux-monitor/" title="linux系统工具总结" itemprop="url">linux系统工具总结</a>
+      <a href="/2015/11/04/old/linux-monitor/" title="linux系统工具总结" itemprop="url">linux系统工具总结</a>
   </h1>
   <p class="article-author">By
        
@@ -422,7 +518,7 @@
         
         <p class="article-more-link">
           
-            <a href="/2015/11/04/linux-monitor/#more">Read More</a>
+            <a href="/2015/11/04/old/linux-monitor/#more">Read More</a>
           
        </p>
     </div>
@@ -443,7 +539,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/11/04/linux-monitor/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/04/linux-monitor/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/11/04/old/linux-monitor/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/04/old/linux-monitor/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -463,7 +559,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/10/17/virt-disk-format-qcow2-or-raw/" title="Openstack中虚拟机镜像格式的选择" itemprop="url">Openstack中虚拟机镜像格式的选择</a>
+      <a href="/2015/10/17/old/virt-disk-format-qcow2-or-raw/" title="Openstack中虚拟机镜像格式的选择" itemprop="url">Openstack中虚拟机镜像格式的选择</a>
   </h1>
   <p class="article-author">By
        
@@ -488,7 +584,7 @@
         
         <p class="article-more-link">
           
-            <a href="/2015/10/17/virt-disk-format-qcow2-or-raw/#more">Read More</a>
+            <a href="/2015/10/17/old/virt-disk-format-qcow2-or-raw/#more">Read More</a>
           
        </p>
     </div>
@@ -509,7 +605,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/10/17/virt-disk-format-qcow2-or-raw/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/17/virt-disk-format-qcow2-or-raw/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/10/17/old/virt-disk-format-qcow2-or-raw/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/17/old/virt-disk-format-qcow2-or-raw/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -529,7 +625,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/30/openstack-qos/" title="openstack中的Qos功能" itemprop="url">openstack中的Qos功能</a>
+      <a href="/2015/09/30/old/openstack-qos/" title="openstack中的Qos功能" itemprop="url">openstack中的Qos功能</a>
   </h1>
   <p class="article-author">By
        
@@ -556,7 +652,7 @@
         
         <p class="article-more-link">
           
-            <a href="/2015/09/30/openstack-qos/#more">Read More</a>
+            <a href="/2015/09/30/old/openstack-qos/#more">Read More</a>
           
        </p>
     </div>
@@ -577,7 +673,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/09/30/openstack-qos/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/30/openstack-qos/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/09/30/old/openstack-qos/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/30/old/openstack-qos/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -597,7 +693,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/29/openstack-mirror-and-password/" title="openstack-mirror-and-password" itemprop="url">openstack-mirror-and-password</a>
+      <a href="/2015/09/29/old/openstack-mirror-and-password/" title="openstack-mirror-and-password" itemprop="url">openstack-mirror-and-password</a>
   </h1>
   <p class="article-author">By
        
@@ -631,7 +727,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/09/29/openstack-mirror-and-password/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/29/openstack-mirror-and-password/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/09/29/old/openstack-mirror-and-password/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/29/old/openstack-mirror-and-password/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -651,7 +747,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/28/boot-vm-in-specify-host/" title="Openstack 决定虚机的宿主机" itemprop="url">Openstack 决定虚机的宿主机</a>
+      <a href="/2015/09/28/old/boot-vm-in-specify-host/" title="Openstack 决定虚机的宿主机" itemprop="url">Openstack 决定虚机的宿主机</a>
   </h1>
   <p class="article-author">By
        
@@ -675,7 +771,7 @@
         
         <p class="article-more-link">
           
-            <a href="/2015/09/28/boot-vm-in-specify-host/#more">Read More</a>
+            <a href="/2015/09/28/old/boot-vm-in-specify-host/#more">Read More</a>
           
        </p>
     </div>
@@ -696,7 +792,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/09/28/boot-vm-in-specify-host/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/28/boot-vm-in-specify-host/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/09/28/old/boot-vm-in-specify-host/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/28/old/boot-vm-in-specify-host/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -716,7 +812,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/28/openstack-availability-zone/" title="openstack中的可用域的配置" itemprop="url">openstack中的可用域的配置</a>
+      <a href="/2015/09/28/old/openstack-availability-zone/" title="openstack中的可用域的配置" itemprop="url">openstack中的可用域的配置</a>
   </h1>
   <p class="article-author">By
        
@@ -742,7 +838,7 @@
         
         <p class="article-more-link">
           
-            <a href="/2015/09/28/openstack-availability-zone/#more">Read More</a>
+            <a href="/2015/09/28/old/openstack-availability-zone/#more">Read More</a>
           
        </p>
     </div>
@@ -763,95 +859,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/09/28/openstack-availability-zone/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/28/openstack-availability-zone/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/24/openstack-important-param/" title="Openstack中的一些重要配置参数" itemprop="url">Openstack中的一些重要配置参数</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-24T01:20:45.000Z" itemprop="datePublished"> 发表于 2015-09-24</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="Nova_关键配置">Nova 关键配置</h2><blockquote>
-<p>scheduler_default_filter =  RetryFilter, AvailabilityZoneFilter, RamFilter, ComputeFilter, ImagePropertiesFilter, JsonFilter, EcuFilter, CoreFilter</p>
-</blockquote>
-<p>nova-scheduler 可用的过滤器, Retry 是用来跳过已经尝试创建但是失败的计算节点，防止重调度死循环；AvailabilityZone 是过滤那些用户指定的 AZ 的，防止用户的虚拟机创建到未指定的 AZ 里面；Ram 是过滤掉内存不足的计算节点；Core 是过滤掉 VCPU 数量不足的计算节点；</p>
-<h2 id="宿主资源隔离">宿主资源隔离</h2><blockquote>
-<p>vcpu_pin_set = 4-$</p>
-</blockquote>
-<p>虚拟机vCPU的绑定范围,可以防止虚拟机争抢宿主机进程的CPU资源,建议预留前几个物理CPU,把后面的所有CPU分配给虚拟机使用,可以配合cgroup或者内核启动参数来实现宿主进程不占用虚拟机使用的哪些CPU资源</p>
-<blockquote>
-<p>cpu_allocation_ratio = 4.0</p>
-</blockquote>
-<p>物理CPU超售比例,默认是16倍,超线程也算作一个物理CPU</p>
-<blockquote>
-<p>ram_allocation_ratio = 1.0</p>
-</blockquote>
-<p>内存分配超售比例,默认是1.5倍,生产环境不建议开启超售</p>
-<blockquote>
-<p>reserved_host_memory_mb = 4096</p>
-</blockquote>
-<p>内存预留量,这部分内存不能被虚拟机使用</p>
-<blockquote>
-<p>reserverd_host_disk_mb = 10240</p>
-</blockquote>
-<p>磁盘预留空间,这部分空间不能被虚拟机使用</p>
-<blockquote>
-<p>multi_host = True</p>
-</blockquote>
-<p>是否开启nova-network的多节点模式,如果需要多节点部署,则该项需要设置为True</p>
-<h3 id="验证">验证</h3><p>校验虚拟机的vCPU亲和性,检查CPU是否成功隔离,创建一个虚机,然后通过libvirt参看</p>
-<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ virsh list</span><br><span class="line"> Id    Name                           State</span><br><span class="line"> ----------------------------------------------------</span><br><span class="line">  42   <span class="instruction"> instance-00000553 </span>             running</span><br><span class="line">  43   <span class="instruction"> instance-00000596 </span>             running</span><br><span class="line"></span><br><span class="line">$ virsh vcpuinfo 42</span><br><span class="line">VCPU:           0</span><br><span class="line">CPU:            4</span><br><span class="line">State:          running</span><br><span class="line">CPU time:       324210.2s</span><br><span class="line">CPU Affinity:   ----yyyyyyyyyyyyyyyyyyyyyyyyyyyy</span><br></pre></td></tr></table></figure>
-<p>这就说明，虚拟机的vCPU对物理CPU的前四个核非亲和，他一般就会在后面的物理CPU中调度执行各种服务。</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Devops/">Devops</a><a href="/tags/Openstack/">Openstack</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/24/openstack-important-param/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/24/openstack-important-param/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/09/28/old/openstack-availability-zone/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/28/old/openstack-availability-zone/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -895,7 +903,7 @@
 		  
 		
 		  
-			<li><a href="/categories/转载/" title="转载">转载<sup>3</sup></a></li>
+			<li><a href="/categories/转载/" title="转载">转载<sup>4</sup></a></li>
 		  
 		
 		</ul>
@@ -909,6 +917,10 @@
 		
 			
 				<li><a href="/tags/Openstack/" title="Openstack">Openstack<sup>10</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/git/" title="git">git<sup>2</sup></a></li>
 			
 		
 			
@@ -937,10 +949,6 @@
 		
 			
 				<li><a href="/tags/系统管理/" title="系统管理">系统管理<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/git/" title="git">git<sup>1</sup></a></li>
 			
 		
 			

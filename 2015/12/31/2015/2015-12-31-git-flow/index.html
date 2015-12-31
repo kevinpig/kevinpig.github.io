@@ -1,0 +1,563 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>git源代码管理模型 | kevin的博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="kevin">
+    
+
+    
+    <meta name="description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些是摘抄自互联网,如有雷同,实属荣幸.
+Git Flow 是什么Git Flow是构建在Git之上的一个组织软件开发活动的模型，是在Git之上构建的一项软件开发最佳实践。Git Flow是一套使用Git进行源代码管理时的一套行为规范和简化部分Git操作的工具。
+2010年5月，在一篇名为“一种成功的Git分支模型”的博文中，@nvie介绍了一种在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git源代码管理模型">
+<meta property="og:url" content="https://kevinpig.github.io/2015/12/31/2015/2015-12-31-git-flow/index.html">
+<meta property="og:site_name" content="kevin的博客">
+<meta property="og:description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些是摘抄自互联网,如有雷同,实属荣幸.
+Git Flow 是什么Git Flow是构建在Git之上的一个组织软件开发活动的模型，是在Git之上构建的一项软件开发最佳实践。Git Flow是一套使用Git进行源代码管理时的一套行为规范和简化部分Git操作的工具。
+2010年5月，在一篇名为“一种成功的Git分支模型”的博文中，@nvie介绍了一种在">
+<meta property="og:image" content="https://kevinpig.github.io/images/2015/12/git-flow.png">
+<meta property="og:image" content="https://kevinpig.github.io/images/2015/12/Main-branch.png">
+<meta property="og:image" content="https://kevinpig.github.io/images/2015/12/feature.png">
+<meta property="og:image" content="https://kevinpig.github.io/images/2015/12/release-branch.png">
+<meta property="og:image" content="https://kevinpig.github.io/images/2015/12/hotfix.png">
+<meta property="og:updated_time" content="2015-12-31T07:46:33.661Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="git源代码管理模型">
+<meta name="twitter:description" content="声明:本博客欢迎转发内容系本人学习, 研究和总结,有些是摘抄自互联网,如有雷同,实属荣幸.
+Git Flow 是什么Git Flow是构建在Git之上的一个组织软件开发活动的模型，是在Git之上构建的一项软件开发最佳实践。Git Flow是一套使用Git进行源代码管理时的一套行为规范和简化部分Git操作的工具。
+2010年5月，在一篇名为“一种成功的Git分支模型”的博文中，@nvie介绍了一种在">
+
+    
+    <link rel="alternative" href="/atom.xml" title="kevin的博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="kevin的博客" title="kevin的博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="kevin的博客">kevin的博客</a></h1>
+				<h2 class="blog-motto">记录工作生活中的点滴</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:kevinpig.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/31/2015/2015-12-31-git-flow/" title="git源代码管理模型" itemprop="url">git源代码管理模型</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="kevin" target="_blank" itemprop="author">kevin</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-31T06:59:00.000Z" itemprop="datePublished"> 发表于 2015-12-31</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Git_Flow_是什么"><span class="toc-number">1.</span> <span class="toc-text">Git Flow 是什么</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Git_Flow_中的分支"><span class="toc-number">2.</span> <span class="toc-text">Git Flow 中的分支</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#主分支"><span class="toc-number">2.1.</span> <span class="toc-text">主分支</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#master分支"><span class="toc-number">2.1.1.</span> <span class="toc-text">master分支</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#develop分支"><span class="toc-number">2.1.2.</span> <span class="toc-text">develop分支</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#辅助分支"><span class="toc-number">2.2.</span> <span class="toc-text">辅助分支</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#feature分支"><span class="toc-number">2.2.1.</span> <span class="toc-text">feature分支</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#release分支"><span class="toc-number">2.2.2.</span> <span class="toc-text">release分支</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hotfix分支"><span class="toc-number">2.2.3.</span> <span class="toc-text">hotfix分支</span></a></li></ol></li></ol></li></ol>
+		
+		</div>
+		
+		<p>声明:<br>本博客欢迎转发<br>内容系本人学习, 研究和总结,有些是摘抄自互联网,如有雷同,实属荣幸.</p>
+<h1 id="Git_Flow_是什么">Git Flow 是什么</h1><p>Git Flow是构建在Git之上的一个组织软件开发活动的模型，是在Git之上构建的一项软件开发最佳实践。Git Flow是一套使用Git进行源代码管理时的一套行为规范和简化部分Git操作的工具。</p>
+<p>2010年5月，在一篇名为“<a href="http://nvie.com/posts/a-successful-git-branching-model/" target="_blank" rel="external">一种成功的Git分支模型</a>”的博文中，@nvie介绍了一种在Git之上的软件开发模型。通过利用Git创建和管理分支的能力，为每个分支设定具有特定的含义名称，并将软件生命周期中的各类活动归并到不同的分支上。实现了软件开发过程不同操作的相互隔离。这种软件开发的活动模型被nwie称为“Git Flow”。</p>
+<p>一般而言，软件开发模型有常见的瀑布模型、迭代开发模型、以及最近出现的敏捷开发模型等不同的模型。每种模型有各自应用场景。Git Flow重点解决的是由于源代码在开发过程中的各种冲突导致开发活动混乱的问题。因此，Git flow可以很好的于各种现有开发模型相结合使用。</p>
+<p>在开始研究Git Flow的具体内容前，下面这张图可以看到模型的全貌（引自nvie的<a href="http://nvie.com/posts/a-successful-git-branching-model/" target="_blank" rel="external">博文</a>)：</p>
+<p><img src="/images/2015/12/git-flow.png" alt="Git Flow"></p>
+<h1 id="Git_Flow_中的分支">Git Flow 中的分支</h1><p>Git Flow模型中定义了主分支和辅助分支两类分支。其中主分支用于组织与软件开发、部署相关的活动；辅助分支组织为了解决特定的问题而进行的各种开发活动。</p>
+<h2 id="主分支">主分支</h2><p>主分支是所有开发活动的核心分支。所有的开发活动产生的输出物最终都会反映到主分支的代码中。主分支分为master分支和development分支。</p>
+<p><img src="/images/2015/12/Main-branch.png" alt=" Main"></p>
+<h3 id="master分支">master分支</h3><p>master分支上存放的应该是随时可供在生产环境中部署的代码（Production Ready state）。当开发活动告一段落，产生了一份新的可供部署的代码时，master分支上的代码会被更新。同时，每一次更新，最好添加对应的版本号标签（TAG）。</p>
+<h3 id="develop分支">develop分支</h3><p>develop分支是保存当前最新开发成果的分支。通常这个分支上的代码也是可进行每日夜间发布的代码（Nightly build）。因此这个分支有时也可以被称作“integration branch”。</p>
+<p>当develop分支上的代码已实现了软件需求说明书中所有的功能，通过了所有的测试后，并且代码已经足够稳定时，就可以将所有的开发成果合并回master分支了。对于master分支上的新提交的代码建议都打上一个新的版本号标签（TAG），供后续代码跟踪使用。</p>
+<p>因此，每次将develop分支上的代码合并回master分支时，我们都可以认为一个新的可供在生产环境中部署的版本就产生了。通常而言，“仅在发布新的可供部署的代码时才更新master分支上的代码”是推荐所有人都遵守的行为准则。基于此，理论上说，每当有代码提交到master分支时，我们可以使用Git Hook触发软件自动测试以及生产环境代码的自动更新工作。这些自动化操作将有利于减少新代码发布之后的一些事务性工作。</p>
+<h2 id="辅助分支">辅助分支</h2><p>辅助分支是用于组织解决特定问题的各种软件开发活动的分支。辅助分支主要用于组织软件新功能的并行开发、简化新功能开发代码的跟踪、辅助完成版本发布工作以及对生产代码的缺陷进行紧急修复工作。这些分支与主分支不同，通常只会在有限的时间范围内存在。</p>
+<p>辅助分支包括：</p>
+<ul>
+<li>用于开发新功能时所使用的feature分支；</li>
+<li>用于辅助版本发布的release分支；</li>
+<li>用于修正生产代码中的缺陷的hotfix分支。</li>
+</ul>
+<p>以上这些分支都有固定的使用目的和分支操作限制。从单纯技术的角度说，这些分支与Git其他分支并没有什么区别，但通过命名，我们定义了使用这些分支的方法。</p>
+<h3 id="feature分支">feature分支</h3><p>使用规范：</p>
+<p>可以从develop分支发起feature分支<br>代码必须合并回develop分支<br>feature分支的命名可以使用除master，develop，release-<em>，hotfix-</em>之外的任何名称<br>feature分支（有时也可以被叫做“topic分支”）通常是在开发一项新的软件功能的时候使用，这个分支上的代码变更最终合并回develop分支或者干脆被抛弃掉（例如实验性且效果不好的代码变更）。</p>
+<p>一般而言，feature分支代码可以保存在开发者自己的代码库中而不强制提交到主代码库里</p>
+<p><img src="/images/2015/12/feature.png" alt=" Hotfix branch"></p>
+<h3 id="release分支">release分支</h3><p>使用规范：</p>
+<ul>
+<li>可以从develop分支派生</li>
+<li>必须合并回develop分支和master分支</li>
+<li>分支命名惯例：release-*</li>
+</ul>
+<p>release分支是为发布新的产品版本而设计的。在这个分支上的代码允许做小的缺陷修正、准备发布版本所需的各项说明信息（版本号、发布时间、编译时间等等）。通过在release分支上进行这些工作可以让develop分支空闲出来以接受新的feature分支上的代码提交，进入新的软件开发迭代周期。</p>
+<p>当develop分支上的代码已经包含了所有即将发布的版本中所计划包含的软件功能，并且已通过所有测试时，我们就可以考虑准备创建release分支了。而所有在当前即将发布的版本之外的业务需求一定要确保不能混到release分支之内（避免由此引入一些不可控的系统缺陷）。</p>
+<p>成功的派生了release分支，并被赋予版本号之后，develop分支就可以为“下一个版本”服务了。所谓的“下一个版本”是在当前即将发布的版本之后发布的版本。版本号的命名可以依据项目定义的版本号命名规则进行。</p>
+<p><img src="/images/2015/12/release-branch.png" alt=" Release"></p>
+<h3 id="hotfix分支">hotfix分支</h3><p>使用规范：</p>
+<ul>
+<li>可以从master分支派生</li>
+<li>必须合并回master分支和develop分支</li>
+<li>分支命名惯例：hotfix-*</li>
+</ul>
+<p>除了是计划外创建的以外，hotfix分支与release分支十分相似：都可以产生一个新的可供在生产环境部署的软件版本。</p>
+<p>当生产环境中的软件遇到了异常情况或者发现了严重到必须立即修复的软件缺陷的时候，就需要从master分支上指定的TAG版本派生hotfix分支来组织代码的紧急修复工作。</p>
+<p>这样做的显而易见的好处是不会打断正在进行的develop分支的开发工作，能够让团队中负责新功能开发的人与负责代码紧急修复的人并行的开展工作。</p>
+<p><img src="/images/2015/12/hotfix.png" alt=" Release"></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/转载/">转载</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/git/">git</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="https://kevinpig.github.io/2015/12/31/2015/2015-12-31-git-flow/" data-title="git源代码管理模型 | kevin的博客" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/12/30/2015/2015-12-30-write-blog-with-atom/"  title="使用Atom进行Hexo博客的编写">
+ <strong>下一篇：</strong><br/> 
+ <span>使用Atom进行Hexo博客的编写
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/12/31/2015/2015-12-31-git-flow/" data-title="git源代码管理模型" data-url="https://kevinpig.github.io/2015/12/31/2015/2015-12-31-git-flow/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Git_Flow_是什么"><span class="toc-number">1.</span> <span class="toc-text">Git Flow 是什么</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Git_Flow_中的分支"><span class="toc-number">2.</span> <span class="toc-text">Git Flow 中的分支</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#主分支"><span class="toc-number">2.1.</span> <span class="toc-text">主分支</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#master分支"><span class="toc-number">2.1.1.</span> <span class="toc-text">master分支</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#develop分支"><span class="toc-number">2.1.2.</span> <span class="toc-text">develop分支</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#辅助分支"><span class="toc-number">2.2.</span> <span class="toc-text">辅助分支</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#feature分支"><span class="toc-number">2.2.1.</span> <span class="toc-text">feature分支</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#release分支"><span class="toc-number">2.2.2.</span> <span class="toc-text">release分支</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hotfix分支"><span class="toc-number">2.2.3.</span> <span class="toc-text">hotfix分支</span></a></li></ol></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/dev/" title="dev">dev<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/云计算/" title="云计算">云计算<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/转载/云计算/" title="云计算">云计算<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/转载/" title="转载">转载<sup>4</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Openstack/" title="Openstack">Openstack<sup>10</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/git/" title="git">git<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Devops/" title="Devops">Devops<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/vagrant/" title="vagrant">vagrant<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/云计算/" title="云计算">云计算<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/转载/" title="转载">转载<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Qos/" title="Qos">Qos<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/虚拟化/" title="虚拟化">虚拟化<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/系统管理/" title="系统管理">系统管理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/emacs/" title="emacs">emacs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/image/" title="image">image<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m kevin in united-imaging.com. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/kevinpig" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="kevin">kevin</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"kevinpig"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
